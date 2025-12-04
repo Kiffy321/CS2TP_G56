@@ -4,35 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/index.css">
 </head>
-<body class="bg-gray-50">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-            <h1 class="text-3xl font-bold mb-6 text-center">Login</h1>
-            <form id="login-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-bold mb-2">Username or Email</label>
-                    <input type="text" name="username" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold mb-2">Password</label>
-                    <input type="password" name="password" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600">
-                </div>
-                <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 rounded-lg">
-                    Login
-                </button>
-                <p class="text-center text-sm">
-                    Don't have an account?
-                    <a href="register.html" class="text-yellow-600 hover:underline">Register</a>
-                </p>
-            </form>
-            <div id="error-msg" class="mt-4 text-red-600 text-center hidden"></div>
-        </div>
+<body>
+    <div class="page-wrapper">
+        <div class="PageContent">
+            <header class="TopNav">
+                <a href="home.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="products.html">Products</a>
+                <a href="contact.html">Contact</a>
+                <div class="IconNav" id="auth-buttons"></div>
+            </header>
+
+            <div class="AuthPage">
+                <div class="AuthCard">
+        <h1 class="AuthTitle">Login</h1>
+        <form id="login-form" class="AuthForm">
+          <label for="username">Username or Email</label>
+          <input id="username" name="username" type="text" required>
+
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required>
+
+          <button type="submit" class="AuthButton">Login</button>
+
+          <p class="AuthHelp">Don't have an account? <a href="register.html">Register</a></p>
+        </form>
+        <div id="error-msg" class="AuthError" aria-live="polite"></div>
+      </div>
     </div>
 
-    <!-- External JS -->
-    <script src="js/login.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            fetch('api/login.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: formData.get('username'),
+                    password: formData.get('password')
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const redirect = new URLSearchParams(window.location.search).get('redirect');
+                    window.location.href = redirect === 'cart' ? 'cart.html' : 'home.html';
+                } else {
+                    document.getElementById('error-msg').textContent = data.error;
+                    document.getElementById('error-msg').classList.remove('hidden');
+                }
+            });
+        });
+        </script>
+    
+        </div>
+
+        <div id="site-footer">
+            <footer class="footer">
+                <div class="FooterIconsContainer">
+                    <img src="assets/images/FacebookIcon.png" class="FooterIcons" alt="facebook">
+                    <img src="assets/images/InstagramIcon.png" class="FooterIcons" alt="instagram">
+                    <img src="assets/images/YoutubeIcon.png" class="FooterIcons" alt="youtube">
+                </div>
+                <p class="ContactTitle">© 2025 Luxury Jewelry Store</p>
+            </footer>
+        </div>
+
+    </div>
+    <script src="js/index.js" defer></script>
 </body>
 </html>
-
