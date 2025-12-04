@@ -1,8 +1,7 @@
-
 <?php
 require_once 'config.php';
 
-$sql = "SELECT * FROM products ORDER BY id DESC";
+$sql = "SELECT * FROM products ORDER BY created_at DESC";
 $result = $conn->query($sql);
 
 $products = [];
