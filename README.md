@@ -1,11 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Regulus Jewelry Store
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based e-commerce application for a jewelry store, designed to run with XAMPP on Windows.
+
+## XAMPP Setup (Windows)
+
+### Prerequisites
+- [XAMPP](https://www.apachefriends.org/) installed at `C:\xampp`
+- PHP 8.2+ (included with XAMPP)
+- [Composer](https://getcomposer.org/)
+- [Node.js](https://nodejs.org/) and npm
+
+### Step-by-Step Setup
+
+1. **Place the project in XAMPP's htdocs folder:**
+   ```
+   C:\xampp\htdocs\CS2TP_G56
+   ```
+
+2. **Start XAMPP MySQL:**
+   - Open the XAMPP Control Panel
+   - Click **Start** next to **MySQL**
+   - Wait until the status shows green / "Running"
+
+3. **Enable `pdo_mysql` in PHP:**
+   - Open `C:\xampp\php\php.ini` in a text editor
+   - Find the line `;extension=pdo_mysql`
+   - Remove the leading `;` to uncomment it: `extension=pdo_mysql`
+   - Save the file and restart Apache in XAMPP Control Panel
+
+4. **Install PHP dependencies:**
+   ```cmd
+   cd C:\xampp\htdocs\CS2TP_G56
+   composer install
+   ```
+
+5. **Run the setup script:**
+   Double-click `setup.bat` (or run it from the command prompt):
+   ```cmd
+   setup.bat
+   ```
+   This will:
+   - Copy `.env.example` to `.env`
+   - Generate the application key
+   - Create the `regulus_jewelry` MySQL database
+   - Run database migrations and seeders
+   - Install npm dependencies and build frontend assets
+
+6. **Start the development server:**
+   Double-click `start_dev.bat`:
+   ```cmd
+   start_dev.bat
+   ```
+
+7. **Visit the application at:** http://localhost:8000
+
+---
+
+### Troubleshooting
+
+**MySQL is not running:**
+- Open XAMPP Control Panel and click **Start** next to **MySQL**.
+
+**`pdo_mysql` extension not found:**
+- Edit `C:\xampp\php\php.ini`, find `;extension=pdo_mysql`, remove the `;` and restart Apache.
+
+**Migration fails with "Access denied":**
+- Check `DB_USERNAME` and `DB_PASSWORD` in your `.env` file match your XAMPP MySQL credentials (default: username `root`, password empty).
+
+**Database does not exist:**
+- Run manually: open XAMPP Control Panel → MySQL → Admin (phpMyAdmin), then create a database named `regulus_jewelry`.
+- Or run: `php artisan migrate --force` after the database is created.
+
+---
 
 ## About Laravel
 
