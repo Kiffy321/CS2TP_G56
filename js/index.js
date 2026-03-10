@@ -12,6 +12,22 @@
     return '/api/' + endpoint;
   };
 
+  // --- Session initialization ---
+  function initSession(){
+    fetch(window.getApiPath('init-session.php'), { credentials: 'include' })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          // Update cart count if element exists
+          const cartCountEl = document.getElementById('cart-count');
+          if (cartCountEl && data.cartCount !== undefined) {
+            cartCountEl.textContent = data.cartCount;
+          }
+        }
+      })
+      .catch(err => console.error('Session init error:', err));
+  }
+
   // --- Auth UI injection ---
   function initAuth(){
     fetch(window.getApiPath('check-auth.php'), { credentials: 'include' })
@@ -22,7 +38,7 @@
         if (data.loggedIn) {
           iconNav.innerHTML = `<span style="margin-right:16px;color:#111;">Hello, ${escapeHtml(data.username)}</span>
                                <a href="#" id="logoutBtn" style="margin-right:10px">Logout</a>
-                               <a href="cart.html"><img src="assets/images/CartIcon.png" alt="Cart"></a>`;
+                               <a href="cart.html"><img src="assets/images/CartIcon.png" alt="Cart"><span id="cart-count" style="display:inline-block;margin-left:6px;color:#111;">0</span></a>`;
           const lb = document.getElementById('logoutBtn');
           if (lb) lb.addEventListener('click', e => {
             e.preventDefault();
@@ -32,15 +48,15 @@
         } else {
           iconNav.innerHTML = `<a href="login.html"><img src="assets/images/ProfileIcon.png" alt="Login"></a>
                                <a href="register.html" style="margin-left:8px">Register</a>
-                               <a href="cart.html"><img src="assets/images/CartIcon.png" alt="Cart"></a>`;
+                               <a href="cart.html"><img src="assets/images/CartIcon.png" alt="Cart"><span id="cart-count" style="display:inline-block;margin-left:6px;color:#111;">0</span></a>`;
         }
       })
       .catch(()=>{});
     function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ initAuth(); });
-  else { initAuth(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ initSession(); initAuth(); });
+  else { initSession(); initAuth(); }
 
   // fallback global logout if page doesn't define one
   if (!window.logout){

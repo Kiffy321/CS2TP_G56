@@ -1,4 +1,9 @@
 <?php
+// Configure session cookie settings BEFORE starting session
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_samesite', 'Lax');
+ini_set('session.use_only_cookies', 1);
+
 session_start();
 
 // LOCAL MySQL settings (XAMPP / WAMP typical)
