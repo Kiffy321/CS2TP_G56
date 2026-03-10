@@ -61,6 +61,13 @@ A Laravel-based e-commerce application for a jewelry store, designed to run with
 **MySQL is not running:**
 - Open XAMPP Control Panel and click **Start** next to **MySQL**.
 
+**MySQL starts then immediately stops (most common issue):**
+- This is almost always a **port 3306 conflict** with a separate MySQL/MySQL80 Windows service.
+- Run `fix_mysql.bat` — it detects what is blocking port 3306 and shows three fix options:
+  - **Option A (recommended):** Open `services.msc`, find the `MySQL` or `MySQL80` service, stop it and set it to Manual startup, then start XAMPP MySQL.
+  - **Option B:** Change XAMPP MySQL to port 3307 by editing `C:\xampp\mysql\bin\my.ini` and setting `DB_PORT=3307` in your `.env` file.
+  - **Option C:** Kill the conflicting process by PID using `taskkill /PID [number] /F`.
+
 **`pdo_mysql` extension not found:**
 - Edit `C:\xampp\php\php.ini`, find `;extension=pdo_mysql`, remove the `;` and restart Apache.
 
@@ -70,6 +77,9 @@ A Laravel-based e-commerce application for a jewelry store, designed to run with
 **Database does not exist:**
 - Run manually: open XAMPP Control Panel → MySQL → Admin (phpMyAdmin), then create a database named `regulus_jewelry`.
 - Or run: `php artisan migrate --force` after the database is created.
+
+**After pulling new code updates:**
+- If MySQL is running but the app breaks after a `git pull`, run: `php artisan migrate --force` to apply any new database migrations.
 
 ---
 
