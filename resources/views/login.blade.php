@@ -23,16 +23,17 @@
         <div class="PageContent">
             <div class="AuthPage">
                 <div class="AuthCard">
-                    <h1 class="AuthTitle">Login</h1>
-                    <form action="{{ route('login.post') }}" method="POST" class="AuthForm" id="login-form">
-                        @csrf
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input id="email" name="email" type="email" value="{{ old('email') }}" required>
-                            @error('email')
-                                <span class="error-message">{{ $message }}</span>
-                            @enderror
-                        </div>
+                     <!-- login title -->
+        <h1 class="AuthTitle">Login</h1>
+        <!-- login form -->
+        <form action="{{ route('login-custom.post') }}" method="POST" class="AuthForm" id="login-form">
+            @csrf
+            <!-- email input -->
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" value="{{ old('email') }}" required>
+          @error('email')
+            <span style="color: red; font-size: 12px;">{{ $message }}</span>
+          @enderror
 
                         <div class="form-group">
                             <label for="password">Password</label>
@@ -92,7 +93,7 @@
             const formData = new FormData(e.target);
             
             /* send login details to backend */
-            fetch('{{ route("login.post") }}', {
+            fetch('{{ route("login-custom.post") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
