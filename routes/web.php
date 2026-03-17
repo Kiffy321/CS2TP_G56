@@ -107,7 +107,9 @@ Route::post('/orders/{id}/refund',  [OrderController::class, 'refund'])->name('o
 |-----------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard',               [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/orders',                  [AdminController::class, 'orders'])->name('orders');
+    Route::patch('/orders/{id}/status',    [AdminController::class, 'updateOrderStatus'])->name('orders.updateStatus');
 });
 
 /*

@@ -14,7 +14,13 @@
         if (data.success) {
           const cartCountEl = document.getElementById('cart-count');
           if (cartCountEl && data.cartCount !== undefined) {
-            cartCountEl.textContent = data.cartCount;
+            const count = parseInt(data.cartCount) || 0;
+            if (count > 0) {
+              cartCountEl.textContent = count;
+              cartCountEl.style.display = 'inline-block';
+            } else {
+              cartCountEl.style.display = 'none';
+            }
           }
         }
       })
@@ -29,23 +35,17 @@
         const iconNav = document.getElementById('auth-buttons') || document.querySelector('.IconNav');
         if (!iconNav) return;
         if (data.loggedIn) {
+          const adminIcon = data.is_admin
+            ? `<a href="/admin/orders" aria-label="Customer Orders" style="margin-right:6px;"><img src="/images/orderconfirmed.png" alt="Admin Orders" style="width:28px;height:28px;vertical-align:middle;"></a>`
+            : '';
           iconNav.innerHTML = `<span style="margin-right:16px;color:#111;">Hello, ${escapeHtml(data.username)}</span>
                                <a href="/profile" aria-label="My Profile" style="margin-right:10px"><img src="/images/ProfileIcon.png" alt="Profile" style="width:28px;height:28px;vertical-align:middle;"></a>
-                               <a href="#" id="logoutBtn" style="margin-right:10px">Logout</a>
-                               <a href="/cart"><img src="/images/CartIcon.png" alt="Cart"><span id="cart-count" style="display:inline-block;margin-left:6px;color:#111;">0</span></a>`;
-          const lb = document.getElementById('logoutBtn');
-          if (lb) lb.addEventListener('click', e => {
-            e.preventDefault();
-            fetch('/logout', {
-              method: 'POST',
-              credentials: 'include',
-              headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'Content-Type': 'application/json' }
-            }).then(() => location.href = '/');
-          });
+                               ${adminIcon}
+                               <a href="/cart"><img src="/images/CartIcon.png" alt="Cart"></a>`;
         } else {
           iconNav.innerHTML = `<a href="/login"><img src="/images/ProfileIcon.png" alt="Login"></a>
                                <a href="/register" style="margin-left:8px">Register</a>
-                               <a href="/cart"><img src="/images/CartIcon.png" alt="Cart"><span id="cart-count" style="display:inline-block;margin-left:6px;color:#111;">0</span></a>`;
+                               <a href="/cart"><img src="/images/CartIcon.png" alt="Cart"></a>`;
         }
       })
       .catch(()=>{});

@@ -50,7 +50,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
    text-align: center;
    border-radius: 2px;
    padding: 15px;
-
+   flex-shrink: 0;
 }
 
 .TopNav a:hover{
@@ -67,6 +67,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     margin-left: auto;
     display: flex;
     align-items: center;
+    gap: 4px;
 }
 
 .IconNav img{
@@ -84,6 +85,19 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     max-width: 32px;
     cursor: pointer;
     
+}
+
+.IconNav a svg{
+    transition: opacity 0.2s;
+}
+
+.IconNav a:hover svg{
+    opacity: 0.5;
+}
+
+#auth-buttons{
+    display: flex;
+    align-items: center;
 }
 
 .TitleSection{
