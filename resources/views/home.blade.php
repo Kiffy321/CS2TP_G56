@@ -1,7 +1,6 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
-<<<<<<< Updated upstream
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Skyrose Atelier</title>
@@ -132,12 +131,6 @@
             .BtnPrimary, .BtnGhost { width: 100%; text-align: center; }
         }
     </style>
-=======
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seraphine Atelier | Luxury Jewellery</title>
-@vite(['resources/js/app.js'])
->>>>>>> Stashed changes
 </head>
 <body>
     <div class="page-wrapper">
@@ -150,22 +143,24 @@
                 <a href="/about">About</a>
                 <a href="/products">Products</a>
                 <a href="/contact">Contact</a>
-                <div class="IconNav" id="auth-buttons">
-                    <a href="/login" aria-label="Login"><img src="{{ asset('images/ProfileIcon.png') }}" alt="Profile"></a>
-                    <a href="/cart" aria-label="Cart">
-                        <img src="{{ asset('images/CartIcon.png') }}" alt="Cart">
-                        <span id="cart-count" style="display:inline-block;margin-left:6px;color:#111;">0</span>
-                    </a>
+                <div class="IconNav">
+                    <div class="NavSearchWrap"><button class="NavSearchBtn" type="button" aria-label="Search"><img src="{{ asset('images/SearchIcon.png') }}" alt="Search"></button><input type="text" class="NavSearchInput" placeholder="Search products..." aria-label="Search products"></div>
+                    <a href="/wishlist" aria-label="Wishlist" class="NavWishlist"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>
+                    <div id="auth-buttons">
+                        <a href="/login" aria-label="Login"><img src="{{ asset('images/ProfileIcon.png') }}" alt="Profile"></a>
+                        <a href="/cart" aria-label="Cart">
+                            <img src="{{ asset('images/CartIcon.png') }}" alt="Cart">
+                        </a>
+                    </div>
                 </div>
             </header>
 
-<<<<<<< Updated upstream
             <main>
                 <section class="Hero" aria-label="Hero">
                     <div class="HeroInner">
                         <div class="HeroCopy">
                             <h1 class="HeroTitle">Timeless Jewellery, Crafted to Last</h1>
-                            <p class="HeroSubtitle">Discover handcrafted pieces made with ethically sourced materials. From everyday elegance to statement heirlooms — find something to cherish.</p>
+                            <p class="HeroSubtitle">Discover handcrafted pieces made with ethically sourced materials. From everyday elegance to statement heirlooms â€” find something to cherish.</p>
                             <div class="HeroCTA">
                                 <a href="/products" style="text-decoration:none;"><button class="BtnPrimary">Shop Collection</button></a>
                                 <a href="/about" style="text-decoration:none;"><button class="BtnGhost">Our Story</button></a>
@@ -196,112 +191,6 @@
                 </section>
             </main>
         </div>
-=======
-<header class="navbar">
-<div class="logo">Seraphine Atelier</div>
-<nav>
-<ul class="nav-links">
-<li><a href="/">Home</a></li>
-<li><a href="/products">Shop</a></li>
-<li><a href="/about">About</a></li>
-<li><a href="/contact">Contact</a></li>
-</ul>
-</nav>
-</header>
-
-<!-- HERO -->
-
-<section class="hero">
-
-<div class="container">
-
-<h1 class="hero-title">Discover Timeless Elegance</h1>
-
-<p class="hero-subtitle">
-Luxury handcrafted jewellery for every occasion.
-</p>
-
-<a href="/products" class="btn-primary">Shop Now</a>
-<a href="/products" class="btn-outline">Explore Collections</a>
-
-</div>
-
-</section>
-
-<!-- FEATURED PRODUCTS -->
-
-<section class="product-list-section">
-
-<div class="container">
-
-<h2 class="section-title">Featured Products</h2>
-
-<div class="product-grid">
-
-<a href="/product" class="product-card">
-
-<img src="{{ asset('images/rose-gold.jpg') }}" alt="Elegant Gold Ring">
-
-<h3>Elegant Gold Ring</h3>
-
-<p class="product-price">$249</p>
-
-</a>
-
-<a href="/product" class="product-card">
-
-<img src="{{ asset('images/gold-necklace.jpg') }}" alt="Silver Necklace">
-
-<h3>Silver Necklace</h3>
-
-<p class="product-price">$199</p>
-
-</a>
-
-<a href="/product" class="product-card">
-
-<img src="{{ asset('images/diamond-earring.jpg') }}" alt="Diamond Earrings">
-
-<h3>Diamond Earrings</h3>
-
-<p class="product-price">$349</p>
-
-</a>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- STORY -->
-
-<section class="story-section">
-
-<div class="container">
-
-<h2 class="section-title">Our Story</h2>
-
-<p class="section-subtitle">
-At Seraphine Atelier we craft timeless jewellery that celebrates elegance,
-artistry and individuality. Every piece blends classic craftsmanship with
-modern inspiration.
-</p>
-
-</div>
-
-</section>
-
-<footer class="footer">
-
-<div class="container">
-
-<p>© 2024 Seraphine Atelier • All Rights Reserved</p>
-
-</div>
-
-</footer>
->>>>>>> Stashed changes
 
         @include('partials.footer')
     </div>

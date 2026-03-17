@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Seraphine Atelier</title>
-    @vite(['resources/js/app.js'])
+    <title>Login — Skyrose Atelier</title>
+    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 </head>
 <body>
     <div class="page-wrapper">
-        <header class="navbar">
-            <div class="logo">Seraphine Atelier</div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/products">Shop</a></li>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </nav>
-        </header>
-
         <div class="PageContent">
+            <header class="TopNav">
+                <a class="logo-link" href="/" aria-label="Skyrose Atelier home"><img class="header-logo" src="{{ asset('images/logo Skyrose.jpg') }}" alt="Skyrose Atelier logo"></a>
+                <a href="{{ url('/') }}">Home</a>
+                <a href="{{ url('/about') }}">About</a>
+                <a href="{{ route('products.index') }}">Products</a>
+                <a href="{{ url('/contact') }}">Contact</a>
+                <div class="IconNav">
+                    <a href="/wishlist" aria-label="Wishlist" class="NavWishlist"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>
+                    <div id="auth-buttons"></div>
+                </div>
+            </header>
             <div class="AuthPage">
                 <div class="AuthCard">
                      <!-- login title -->
@@ -62,7 +61,6 @@
     </div>
 </body>
 </html>
-    </div>
 
     <!-- Featured Products Section -->
     @if($products && $products->count() > 0)

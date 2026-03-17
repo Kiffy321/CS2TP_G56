@@ -21,13 +21,14 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     top: 0;
     left: 0;
     width: 100%;
+    box-sizing: border-box;
     z-index: 1000;
     align-items: center;
     padding: 12px 24px;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 
-    
+
 }
 
 .logo-link{
@@ -50,40 +51,188 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
    text-align: center;
    border-radius: 2px;
    padding: 15px;
-
+   flex-shrink: 0;
+   font-size: 15px;
+   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .TopNav a:hover{
     background-color: black;
     color: white;
-    margin-top: -3px;
-    transition-delay: 0.1s;
     cursor: pointer;
-    font-size: 16px;
-    
+}
+
+.NavHello{
+    color: #111;
+    text-decoration: none;
+    margin-right: 4px;
+    padding: 15px;
+    border-radius: 2px;
+    font-size: 15px;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.NavHello:hover{
+    background-color: black;
+    color: white;
+    cursor: pointer;
 }
 
 .IconNav{
     margin-left: auto;
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 
 .IconNav img{
-    margin-right: 20px;
-    max-width: 30px;
-    padding-top: 10px;
-    height: auto;
-    transition: max-width 0.1s ease;
-    transition-delay: 0.3s;
-    
+    margin-right: 4px;
+    max-width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+    transition: filter 0.2s ease;
 }
 
-.IconNav img:hover{
-    opacity: 0.6;
-    max-width: 32px;
+.IconNav a[aria-label="Cart"] img{
+    max-width: 36px;
+    height: 36px;
+}
+
+/* Icon link base */
+.IconNav a{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+    border-radius: 2px;
+    background: transparent;
+    transition: background-color 0.2s ease;
+}
+
+/* Hover: solid black rectangle */
+.IconNav a:hover{
+    background-color: #111;
+}
+
+.IconNav a:hover img{
+    filter: invert(1);
+}
+
+.IconNav a:hover svg{
+    stroke: #fff;
+}
+
+/* Active/selected: solid black with inverted icon */
+.IconNav a:active,
+.IconNav a.active{
+    background-color: #111;
+}
+
+.IconNav a:active img,
+.IconNav a.active img{
+    filter: invert(1);
+}
+
+.IconNav a:active svg,
+.IconNav a.active svg{
+    stroke: #fff;
+}
+
+.NavSearch,
+.NavWishlist{
+    display: inline-flex;
+    align-items: center;
+    padding: 7px;
+    background: transparent;
+    border-radius: 2px;
+    transition: background-color 0.2s ease;
+}
+
+/* Expanding nav search bar */
+.NavSearchWrap{
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.NavSearchBtn{
+    background: transparent;
+    border: none;
     cursor: pointer;
-    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+    border-radius: 2px;
+    transition: background-color 0.2s ease;
+}
+
+.NavSearchBtn:hover{
+    background-color: #111;
+}
+
+.NavSearchBtn:hover img{
+    filter: invert(1);
+}
+
+.NavSearchBtn img{
+    max-width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+    transition: filter 0.2s ease;
+}
+
+.NavSearchInput{
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    border: none;
+    border-bottom: 2px solid #111;
+    outline: none;
+    font-size: 14px;
+    font-family: inherit;
+    background: transparent;
+    color: #111;
+    transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.NavSearchWrap.open .NavSearchInput{
+    width: 180px;
+    opacity: 1;
+    padding: 4px 8px;
+}
+
+.NavSearch:hover,
+.NavWishlist:hover{
+    background-color: #111;
+}
+
+.NavSearch:hover svg,
+.NavWishlist:hover svg{
+    stroke: #fff;
+}
+
+.NavSearch:active,
+.NavWishlist:active{
+    background-color: #111;
+}
+
+.NavSearch:active svg,
+.NavWishlist:active svg{
+    stroke: #fff;
+}
+
+.IconNav a svg{
+    transition: stroke 0.2s ease;
+}
+
+#auth-buttons{
+    display: flex;
+    align-items: center;
 }
 
 .TitleSection{

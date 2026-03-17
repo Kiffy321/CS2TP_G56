@@ -190,6 +190,14 @@
                     @endif
                 </div>
 
+                {{-- Logout --}}
+                <div class="ProfileCard" style="text-align:center;">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="ProfileBtnDanger" style="width:100%;padding:14px;font-size:15px;">Log Out</button>
+                    </form>
+                </div>
+
                 {{-- Delete Account --}}
                 <div class="ProfileCard">
                     <h2 style="color:#842029;">Delete Account</h2>
