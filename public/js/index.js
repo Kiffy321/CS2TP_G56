@@ -38,7 +38,7 @@
           const adminIcon = data.is_admin
             ? `<a href="/admin/orders" aria-label="Customer Orders" style="margin-right:6px;"><img src="/images/orderconfirmed.png" alt="Admin Orders" style="width:28px;height:28px;vertical-align:middle;"></a>`
             : '';
-          iconNav.innerHTML = `<span style="margin-right:16px;color:#111;">Hello, ${escapeHtml(data.username)}</span>
+          iconNav.innerHTML = `<a href="/profile" class="NavHello">Hello, ${escapeHtml(data.username)}</a>
                                <a href="/profile" aria-label="My Profile" style="margin-right:10px"><img src="/images/ProfileIcon.png" alt="Profile" style="width:28px;height:28px;vertical-align:middle;"></a>
                                ${adminIcon}
                                <a href="/cart"><img src="/images/CartIcon.png" alt="Cart"></a>`;
