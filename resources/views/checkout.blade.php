@@ -203,7 +203,7 @@
 
             const btn = document.getElementById('placeOrderBtn');
             btn.disabled = true;
-            btn.textContent = 'Placing Orderâ€¦';
+            btn.textContent = 'Placing Order…';
 
             fetch('/checkout', {
                 method: 'POST',
@@ -214,7 +214,7 @@
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Order placed! Redirectingâ€¦');
+                    showToast('Order placed! Redirecting…');
                     setTimeout(() => window.location = '/orders', 1500);
                 } else {
                     showToast('Error: ' + (data.error || 'Could not place order.'));
