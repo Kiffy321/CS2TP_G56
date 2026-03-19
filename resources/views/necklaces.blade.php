@@ -10,30 +10,8 @@
 <body>
   <div class="page-wrapper">
     <div class="PageContent">
-      <!-- main site navigation -->
-      <header class="TopNav">
-        <a class="logo-link" href="/" aria-label="Skyrose Atelier home"><img class="header-logo" src="{{ asset('images/logo Skyrose.jpg') }}" alt="Skyrose Atelier logo"></a>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/products">Products</a>
-        <a href="/contact">Contact</a>
-        <!-- login/profile/cart icons added by JS -->
-        <div class="IconNav">
-          <div class="NavSearchWrap"><button class="NavSearchBtn" type="button" aria-label="Search"><img src="{{ asset('images/SearchIcon.png') }}" alt="Search"></button><input type="text" class="NavSearchInput" placeholder="Search products..." aria-label="Search products"></div>
-          <a href="/wishlist" aria-label="Wishlist" class="NavWishlist"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>
-          <div id="auth-buttons">
-            <a href="/login" aria-label="Login"><img src="{{ asset('images/ProfileIcon.png') }}" alt="Profile"></a>
-            <a href="/cart" aria-label="Cart"><img src="{{ asset('images/CartIcon.png') }}" alt="Cart"></a>
-          </div>
-        </div>
-      </header>
-
-      @include('partials.category-dropdown', ['active' => 'necklaces'])
-
- <!-- page title + small intro -->
-      <section class="TitleSection">
-        <h1 class="MainTitle">Necklaces</h1>
-        <p class="TitleDescription">Statement and everyday necklaces.</p>
+      @include('partials.nav')
+      <p class="TitleDescription">Statement and everyday necklaces.</p>
       </section>
 
  <!-- necklace products grid -->

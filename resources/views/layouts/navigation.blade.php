@@ -9,10 +9,17 @@
         </div>
         <div class="flex items-center space-x-4">
             @auth
-                <a href="/my-orders" class="flex items-center text-gray-700 hover:text-gray-900">
-                    <img src="/images/orderconfirmed.png" alt="Orders" class="w-6 h-6 mr-2" style="display:inline-block;vertical-align:middle;" />
-                    Orders
-                </a>
+                @if(auth()->user()->is_admin)
+                    <a href="{{ route('admin.orders') }}" class="flex items-center text-gray-700 hover:text-gray-900">
+                        <img src="{{ asset('images/orderconfirmed.png') }}" alt="Customer Orders" class="w-6 h-6 mr-2" style="display:inline-block;vertical-align:middle;" />
+                        Customer Orders
+                    </a>
+                @else
+                    <a href="{{ route('orders.my') }}" class="flex items-center text-gray-700 hover:text-gray-900">
+                        <img src="{{ asset('images/orderconfirmed.png') }}" alt="My Orders" class="w-6 h-6 mr-2" style="display:inline-block;vertical-align:middle;" />
+                        My Orders
+                    </a>
+                @endif
             @endauth
         </div>
     </div>
