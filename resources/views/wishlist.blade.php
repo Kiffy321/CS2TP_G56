@@ -340,14 +340,19 @@
                     '<div class="WishlistCardPrice">' + safePrice + '</div>' +
 
                     '<div class="WishlistCardActions">' +
-/* Add to cart button */
-'<button class="WishlistAddToCartBtn" onclick="addToCartFromWishlist(' +
-escapeHtml(JSON.stringify(item.name)) + ',' +
-escapeHtml(JSON.stringify(item.price)) + ')">Add to Cart</button>' +
+                        /* Add to cart button (uses data-attrs + delegated handler) */
+                        '<button class="WishlistAddToCartBtn" ' +
+                            'data-action="add" ' +
+                            'data-name="' + safeName + '" ' +
+                            'data-price="' + safePrice + '"' +
+                        '>Add to Cart</button>' +
 
-/* Remove button */
-'<button class="WishlistRemoveBtn" onclick="removeFromWishlistPage(' +
-escapeHtml(JSON.stringify(item.name)) + ')" title="Remove from wishlist">&#9829;</button>' +
+                        /* Remove button (uses data-attrs + delegated handler) */
+                        '<button class="WishlistRemoveBtn" ' +
+                            'data-action="remove" ' +
+                            'data-name="' + safeName + '"' +
+                        '>&#9829;</button>' +
+
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -358,8 +363,25 @@ escapeHtml(JSON.stringify(item.name)) + ')" title="Remove from wishlist">&#9829;
     }
 
     /* Make functions accessible globally */
-    window.addToCartFromWishlist = addToCart;
     window.removeFromWishlistPage = removeItem;
+
+    /* Handle clicks via event delegation so data-attrs stay safe and re-renders still work */
+    var wishlistContainer = document.getElementById('wishlist-container');
+    document.addEventListener('click', function (e) {
+        if (!wishlistContainer || !wishlistContainer.contains(e.target)) return;
+
+        var addBtn = e.target.closest('.WishlistAddToCartBtn');
+        var removeBtn = e.target.closest('.WishlistRemoveBtn');
+
+        if (addBtn && addBtn.dataset.name) {
+            addToCart(addBtn.dataset.name, addBtn.dataset.price);
+            return;
+        }
+
+        if (removeBtn && removeBtn.dataset.name) {
+            removeItem(removeBtn.dataset.name);
+        }
+    });
 
     /* Initial render on page load */
     renderWishlist();
