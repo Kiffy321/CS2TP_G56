@@ -8,6 +8,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChatbotController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,6 +52,13 @@ Route::get('/products/{id}', [ProductController::class, 'show'])->name('products
 */
 Route::get('/contact',  [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+/*
+|-----------------------------------------------------------------------
+| Chatbot
+|-----------------------------------------------------------------------
+*/
+Route::post('/chatbot/message', [ChatbotController::class, 'respond'])->name('chatbot.respond');
 
 /*
 |-----------------------------------------------------------------------

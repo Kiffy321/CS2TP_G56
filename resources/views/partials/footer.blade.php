@@ -77,4 +77,6 @@
     </footer>
 </div>
 <script>try { document.getElementById('year').textContent = new Date().getFullYear(); } catch(e){}</script>
+@include('partials.chatbot')
 <script src="{{ asset('js/index.js') }}" defer></script>
+<script src="{{ asset('js/chatbot.js') }}" defer></script>
