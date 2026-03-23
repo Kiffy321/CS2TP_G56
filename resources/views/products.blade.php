@@ -87,7 +87,7 @@
             <span class="ProductBadge">{{ $product->category }}</span>
         </div>
         <div class="ProductInfo">
-                    <h3 class="ProductTitle">Amethyst Tennis Bracelet</h3>
+            <h3 class="ProductTitle">{{ $product->name }}</h3>
             <p class="ProductDescription">{{ $product->description }}</p>
             <div class="ProductMeta">
                     <span class="StockText {{ $product->stock_quantity > 0 ? 'in-stock' : 'out-of-stock' }}">
