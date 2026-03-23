@@ -163,15 +163,15 @@
                             </a>
                         </div>
                         <div>
-                            <a href="/products/2" data-name="Buta Ring" data-category="Ring">
-                            <img class="FeaturedItem" src="{{ asset('images/ButaRing.png') }}" alt="Buta Ring">
-                            <h3>Buta Ring</h3>
+                            <a href="/products/2" data-name="Pearl Necklace" data-category="Necklace">
+                            <img class="FeaturedItem" src="{{ asset('images/pearl-necklace.jpg') }}" alt="Pearl Necklace">
+                            <h3>Pearl Necklace</h3>
                             </a>
                         </div>
                         <div>
-                            <a href="/products/3" data-name="Threadbare Earrings" data-category="Earrings">
-                            <img class="FeaturedItem" src="{{ asset('images/ThreadbareEarrings.png') }}" alt="Threadbare Earrings">
-                            <h3>Threadbare Earrings</h3>
+                            <a href="/products/3" data-name="Golden Hoop Earrings" data-category="Earrings">
+                            <img class="FeaturedItem" src="{{ asset('images/gold-hoop.jpg') }}" alt="Golden Hoop Earrings">
+                            <h3>Golden Hoop Earrings</h3>
                             </a>
                         </div>
                     </div>
