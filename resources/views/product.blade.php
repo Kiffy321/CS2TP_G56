@@ -285,7 +285,7 @@
                 @endforeach
                 </ul>
             @else
-                <p>No reviews yet.</p>
+                
             @endif
         </div>
     </div>
@@ -313,6 +313,7 @@
                     <title>{{ $product->name }} | Product Details</title>
                     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
                     <link rel="icon" type="image/jpeg" href="{{ asset('images/logo%20Skyrose.jpg') }}">
+}
                 </head>
                 <body>
                     <div class="page-wrapper">
@@ -482,4 +483,4 @@
                     </script>
                 </body>
                 </html>
-            }
+            
