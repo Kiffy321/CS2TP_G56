@@ -26,6 +26,7 @@
                                     <th>Order</th>
                                     <th>Date</th>
                                     @if($isAdmin)<th>Customer</th>@endif
+                                    <th>Products</th>
                                     <th style="text-align:center;">Items</th>
                                     <th style="text-align:right;">Total</th>
                                     <th style="text-align:center;">Status</th>
@@ -40,6 +41,11 @@
                                     @if($isAdmin)
                                         <td style="font-size:13px;">{{ $order->user->name ?? 'Unknown' }}<br><span style="color:#999;">{{ $order->user->email ?? '' }}</span></td>
                                     @endif
+                                    <td>
+                                        @foreach($order->items as $item)
+                                            <span style="display:inline-block; margin-bottom:2px;">{{ $item->product->name ?? 'Product' }}</span>@if(!$loop->last), @endif
+                                        @endforeach
+                                    </td>
                                     <td style="text-align:center;">{{ $order->items->count() }}</td>
                                     <td style="text-align:right;" class="OrderAmount">&pound;{{ number_format($order->total_amount, 2) }}</td>
                                     <td style="text-align:center;">

@@ -265,38 +265,6 @@
         }
     </script>
 </body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-            </div>
-        </div>
-
-        <!-- Product Reviews Section -->
-        <div class="ProductReviews" style="max-width:700px;margin:40px auto 0;">
-            <h2>Product Reviews</h2>
-            @if(session('success'))
-                <div style="color:green;">{{ session('success') }}</div>
-            @endif
-            @auth
-            <form method="POST" action="{{ route('reviews.store', ['product' => $product->id]) }}" style="margin-bottom:30px;">
-                @csrf
-                <label for="rating">Rating:</label>
-                <select name="rating" id="rating" required>
-                    <option value="">Select</option>
-                    @for($i=1;$i<=5;$i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                    @endfor
-                </select>
-                <br>
-                <label for="comment">Comment:</label><br>
-                <textarea name="comment" id="comment" rows="3" style="width:100%;max-width:500px;"></textarea>
-                <br>
-                <button type="submit">Submit Review</button>
-            </form>
-            @else
-                <p><a href="{{ route('login') }}">Log in</a> to leave a review.</p>
-            @endauth
 
             @if($product->reviews->count())
                 <ul style="list-style:none;padding:0;">

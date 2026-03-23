@@ -1,3 +1,110 @@
+/* Orders Page Modern Styles */
+.OrdersPage {
+    max-width: 900px;
+    margin: 40px auto 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    padding: 36px 32px 32px 32px;
+}
+
+.OrdersPage h1 {
+    font-size: 2.2rem;
+    font-family: 'Georgia', serif;
+    margin-bottom: 28px;
+    color: #b5a95a;
+    letter-spacing: 1px;
+}
+
+.OrdersTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #faf9f6;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(212,175,55,0.06);
+}
+.OrdersTable th, .OrdersTable td {
+    padding: 16px 14px;
+    text-align: left;
+}
+.OrdersTable th {
+    background: #f5f2e6;
+    color: #b5a95a;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e6e2c7;
+}
+.OrdersTable tr {
+    border-bottom: 1px solid #f0ead6;
+}
+.OrdersTable tr:nth-child(even) {
+    background: #f8f7f3;
+}
+.OrdersTable td {
+    font-size: 1rem;
+    color: #222;
+}
+.OrdersTable td:last-child {
+    text-align: center;
+}
+.OrdersTable td a {
+    color: #2e7d32;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.18s;
+}
+.OrdersTable td a:hover {
+    color: #b5a95a;
+}
+.OrdersTable button, .OrdersTable .btn-cancel {
+    background: #fff3e0;
+    color: #b71c1c;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    margin-left: 6px;
+}
+.OrdersTable button:hover, .OrdersTable .btn-cancel:hover {
+    background: #ffe0b2;
+    color: #b5a95a;
+}
+.OrdersTable td[style*="font-weight:700"] {
+    color: #b5a95a;
+}
+.OrdersTable td[style*="text-align:right"] {
+    font-weight: 700;
+    color: #222;
+}
+.OrdersTable td[style*="text-align:center"] {
+    color: #444;
+}
+.EmptyOrders {
+    text-align: center;
+    padding: 48px 0 32px;
+    color: #888;
+}
+.EmptyOrders a {
+    display: inline-block;
+    margin-top: 18px;
+    background: #d4af37;
+    color: #111;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(212,175,55,0.10);
+    transition: background 0.18s, color 0.18s;
+}
+.EmptyOrders a:hover {
+    background: #b5a95a;
+    color: #fff;
+}
 body{
     font-family:Georgia, 'Times New Roman', Times, serif;
     margin: 15px;
@@ -60,8 +167,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     padding: 12px 24px;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-
-
 }
 
 .logo-link{
@@ -80,13 +185,13 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .header-logo:hover{ transform: translateY(-2px); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18)); }
 
 .TopNav a{
-   color: black;
-   text-align: center;
-   border-radius: 2px;
-   padding: 15px;
-   flex-shrink: 0;
-   font-size: 15px;
-   transition: background-color 0.2s ease, color 0.2s ease;
+    color: black;
+    text-align: center;
+    border-radius: 2px;
+    padding: 15px;
+    flex-shrink: 0;
+    font-size: 15px;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .TopNav a:hover{
@@ -268,9 +373,9 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     align-items: center;
 }
 
-.TitleSection{
-    margin-top: 90px;
-    padding: 80px 24px 56px;
+ .TitleSection{
+    margin-top: 32px;
+    padding: 32px 24px 32px;
     text-align: center;
     background: radial-gradient(circle at 20% 20%, rgba(212,175,55,0.12), transparent 35%),
                 radial-gradient(circle at 80% 10%, rgba(0,0,0,0.10), transparent 40%),
@@ -963,7 +1068,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 /* Products grid and card styles for homepage (simple, site CSS based) */
 .ProductsGrid{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
     padding: 24px 30px;
     max-width: 1200px;
