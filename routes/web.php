@@ -138,6 +138,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard',               [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/orders',                  [AdminController::class, 'orders'])->name('orders');
     Route::patch('/orders/{id}/status',    [AdminController::class, 'updateOrderStatus'])->name('orders.updateStatus');
+
+    // Product management
+    Route::get('/products/{id}/edit',      [AdminController::class, 'editProduct'])->name('products.edit');
+    Route::post('/products/{id}/edit',     [AdminController::class, 'updateProduct'])->name('products.update');
+
+    // Dismiss low stock alert
+    Route::post('/dismiss-low-stock-alert', [AdminController::class, 'dismissLowStockAlert'])->name('dismissLowStockAlert');
 });
 
 /*

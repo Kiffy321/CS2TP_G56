@@ -44,6 +44,29 @@
                     <a href="{{ route('admin.orders') }}">Customer Orders</a>
                 </div>
 
+                @if(isset($lowStockProducts) && $lowStockProducts->count() && !session('dismiss_low_stock_alert'))
+                    <div id="lowStockAlert" style="position:relative;background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 6px; padding: 18px 24px; margin-bottom: 32px;">
+                        <button onclick="dismissLowStockAlert()" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:18px;color:#856404;cursor:pointer;">&times;</button>
+                        <strong>Inventory Alert:</strong> The following products are out of stock or below their threshold:
+                        <ul style="margin: 12px 0 0 18px;">
+                            @foreach($lowStockProducts as $product)
+                                <li>
+                                    <strong>{{ $product->name }}</strong> &ndash; Stock: {{ $product->stock_quantity }} (Threshold: {{ $product->stock_threshold }})
+                                    <a href="{{ route('admin.products.edit', $product->id) }}" style="margin-left:10px;font-size:13px;">Edit</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <script>
+                        function dismissLowStockAlert() {
+                            fetch("{{ route('admin.dismissLowStockAlert') }}", { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } })
+                                .then(() => {
+                                    document.getElementById('lowStockAlert').style.display = 'none';
+                                });
+                        }
+                    </script>
+                @endif
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="number">{{ $totalOrders }}</div>

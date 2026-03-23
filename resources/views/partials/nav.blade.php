@@ -6,9 +6,13 @@
     <a href="/about">About</a>
     <a href="/products">Products</a>
     <a href="/contact">Contact</a>
-    <div class="IconNav">
+    <div class="IconNav" style="display: flex; justify-content: center; align-items: center; gap: 16px; width: 600px; margin: 0 auto;">
         @auth
-            @if(auth()->user()->is_admin != 1)
+            @if(auth()->user()->is_admin == 1)
+                <a href="{{ route('admin.dashboard') }}" aria-label="Admin Dashboard" title="Admin Dashboard">
+                    <img src="{{ asset('images/inventory.png') }}" alt="Admin Inventory" style="width:40px;height:32px;border-radius:50%;background:#fff3cd;padding:2px 6px;vertical-align:middle;" />
+                </a>
+            @else
                 <a href="{{ route('orders.my') }}" aria-label="My Orders">
                     <img src="{{ asset('images/orderconfirmed.png') }}" alt="Order Confirmed" class="NavOrderIcon" style="width:32px;height:32px;vertical-align:middle;margin-right:10px;" />
                 </a>
@@ -29,8 +33,8 @@
             @auth
                 {{-- DEBUG: is_admin = {{ var_export(auth()->user()->is_admin, true) }} --}}
                 @if(auth()->user()->is_admin == 1)
-                    <a href="{{ route('admin.orders') }}" aria-label="Customer Orders" class="NavAdminOrders" title="Customer Orders">
-                        <img src="{{ asset('images/orderconfirmed.png') }}" alt="Customer Orders" class="NavOrderIcon" style="width:20px;height:20px;display:inline-block;vertical-align:middle;" />
+                    <a href="{{ route('admin.dashboard') }}" aria-label="Admin Dashboard" class="NavAdminInventory" title="Admin Dashboard">
+                        <img src="{{ asset('images/inventory.png') }}" alt="Admin Inventory" style="width:32px;height:32px;border-radius:50%;background:#fff3cd;padding:2px;vertical-align:middle;" />
                     </a>
                 @else
                     <a href="{{ route('orders.my') }}" aria-label="My Orders" class="NavMyOrders" title="My Orders">
@@ -38,7 +42,12 @@
                     </a>
                 @endif
             @else
-                <a href="/login" aria-label="Login"><img src="{{ asset('images/ProfileIcon.png') }}" alt="Login"></a>
+                @php $isAdmin = auth()->check() && auth()->user()->is_admin == 1; @endphp
+                @if($isAdmin)
+                    <a href="{{ route('admin.dashboard') }}" aria-label="Admin Dashboard"><img src="{{ asset('images/inventory.png') }}" alt="Admin Inventory" style="width:32px;height:32px;border-radius:50%;background:#fff3cd;padding:2px;"></a>
+                @else
+                    <a href="/login" aria-label="Login"><img src="{{ asset('images/ProfileIcon.png') }}" alt="Login"></a>
+                @endif
             @endauth
             <a href="/cart" aria-label="Cart">
                 <img src="{{ asset('images/CartIcon.png') }}" alt="Cart">
