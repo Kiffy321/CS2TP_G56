@@ -24,6 +24,7 @@ class Product extends Model
         'material',
         'image_url',
         'stock_quantity',
+        'stock_threshold',
     ];
 
     /**
@@ -34,6 +35,7 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'stock_quantity' => 'integer',
+        'stock_threshold' => 'integer',
     ];
 
     /**

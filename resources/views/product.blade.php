@@ -77,7 +77,14 @@
                     <div class="ProductDetailInfo">
                         <div class="ProductDetailCategory">{{ $product->category }}</div>
                         <h1>{{ $product->name }}</h1>
+
                         <div class="ProductDetailPrice">&pound;{{ number_format($product->price, 2) }}</div>
+
+                        @auth
+                            @if(auth()->user() && auth()->user()->is_admin)
+                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning" style="margin-bottom: 18px; display: inline-block;">Edit Product (Admin)</a>
+                            @endif
+                        @endauth
 
                         @if($product->stock_quantity > 0)
                             <span class="StockBadge in-stock">In Stock ({{ $product->stock_quantity }} available)</span>
