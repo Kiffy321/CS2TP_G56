@@ -298,10 +298,10 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 }
 
 .NavSearchInput{
-    width: 0;
-    opacity: 0;
-    overflow: hidden;
-    padding: 0;
+    width: 180px;
+    opacity: 1;
+    overflow: visible;
+    padding: 4px 8px;
     border: none;
     border-bottom: 2px solid #111;
     outline: none;
@@ -310,12 +310,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     background: transparent;
     color: #111;
     transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
-}
-
-.NavSearchWrap.open .NavSearchInput{
-    width: 180px;
-    opacity: 1;
-    padding: 4px 8px;
 }
 
 .NavSearch:hover,
@@ -862,7 +856,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     margin: 0 auto 18px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px 26px;
+    gap: 18px 48px;
     align-items: start;
 }
 

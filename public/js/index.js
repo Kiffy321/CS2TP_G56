@@ -141,12 +141,14 @@ function showCartToast(msg) {
 }
 
 // Quick add to cart function
-function addToCartQuick(event, productName, quantity) {
+
+function addToCartQuick(event, productName, quantity, price, productId) {
   event.preventDefault();
   event.stopPropagation();
 
-  const price = productPrices[productName] || 0;
-  if (price === 0) {
+  // Use provided price if available, else fallback to productPrices
+  const finalPrice = (typeof price !== 'undefined') ? price : (productPrices[productName] || 0);
+  if (finalPrice === 0) {
     alert('Error: Product price not found for "' + productName + '".');
     return;
   }
@@ -154,7 +156,8 @@ function addToCartQuick(event, productName, quantity) {
   const payload = {
     productName: productName,
     quantity: quantity || 1,
-    price: price
+    price: finalPrice,
+    productId: productId
   };
 
   fetch('/cart/add', {
@@ -195,11 +198,11 @@ function addToCartQuick(event, productName, quantity) {
   });
 }
 
-window.addToCartWithQuantity = function(event, productName, quantitySelectId) {
+window.addToCartWithQuantity = function(event, productName, quantitySelectId, price, productId) {
   event.preventDefault();
   event.stopPropagation();
   const quantitySelect = document.getElementById(quantitySelectId);
   if (!quantitySelect) { alert('Quantity selector not found'); return; }
   const quantity = parseInt(quantitySelect.value) || 1;
-  addToCartQuick(event, productName, quantity);
+  addToCartQuick(event, productName, quantity, price, productId);
 };

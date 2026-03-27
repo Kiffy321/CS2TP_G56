@@ -196,7 +196,11 @@
             fetch('/checkout', {
                 method: 'POST',
                 credentials: 'include',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': CSRF,
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify({ shipping_address: address, payment_method: payment, notes })
             })
             .then(r => {
@@ -215,9 +219,18 @@
                     btn.textContent = 'Place Order';
                 }
             })
-            .catch(err => {
+            .catch(async err => {
+                let msg = 'Network error: ' + err.message;
+                if (err && err instanceof Response && err.status === 422) {
+                    try {
+                        const data = await err.json();
+                        if (data.errors) {
+                            msg = Object.values(data.errors).flat().join(' ');
+                        }
+                    } catch (e) {}
+                }
                 console.error('Checkout error:', err);
-                showToast('Network error: ' + err.message);
+                showToast(msg);
                 btn.disabled = false;
                 btn.textContent = 'Place Order';
             });

@@ -16,14 +16,23 @@ class CheckoutController extends Controller
     public function index()
     {
         if (!auth()->check()) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json(['error' => 'Please log in to proceed with checkout'], 401);
+            }
             return redirect()->route('login')->with('message', 'Please log in to proceed with checkout');
         }
 
         $cart = session('cart', []);
         if (empty($cart)) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json(['error' => 'Your cart is empty'], 400);
+            }
             return redirect()->route('cart.index')->with('message', 'Your cart is empty');
         }
 
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
         return view('checkout');
     }
 
@@ -50,50 +59,54 @@ class CheckoutController extends Controller
         // Calculate total from session cart
         $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
 
-        // Create order
-        $order = Order::create([
-            'user_id'          => auth()->id(),
-            'order_number'     => 'ORD-' . strtoupper(uniqid()),
-            'total_amount'     => $total,
-            'status'           => 'pending',
-            'payment_method'   => $request->payment_method,
-            'shipping_address' => $request->shipping_address,
-            'notes'            => $request->notes,
-        ]);
+        try {
+            // Create order
+            $order = Order::create([
+                'user_id'          => auth()->id(),
+                'order_number'     => 'ORD-' . strtoupper(uniqid()),
+                'total_amount'     => $total,
+                'status'           => 'pending',
+                'payment_method'   => $request->payment_method,
+                'shipping_address' => $request->shipping_address,
+                'notes'            => $request->notes,
+            ]);
 
+            // Create order items and reduce product stock
+            foreach ($cart as $item) {
+                $productId = $item['product_id'] ?? null;
+                $product = null;
+                if (!$productId) {
+                    // Fallback: look up product by name
+                    $product = Product::where('name', $item['name'])->first();
+                    $productId = $product?->id;
+                } else {
+                    $product = Product::find($productId);
+                }
 
-        // Create order items and reduce product stock
-        foreach ($cart as $item) {
-            $productId = $item['product_id'] ?? null;
-            $product = null;
-            if (!$productId) {
-                // Fallback: look up product by name
-                $product = Product::where('name', $item['name'])->first();
-                $productId = $product?->id;
-            } else {
-                $product = Product::find($productId);
+                if ($productId && $product) {
+                    OrderItem::create([
+                        'order_id'   => $order->id,
+                        'product_id' => $productId,
+                        'quantity'   => $item['quantity'],
+                        'unit_price' => $item['price'],
+                    ]);
+                    // Reduce stock quantity
+                    $product->stock_quantity = max(0, $product->stock_quantity - $item['quantity']);
+                    $product->save();
+                }
             }
 
-            if ($productId && $product) {
-                OrderItem::create([
-                    'order_id'   => $order->id,
-                    'product_id' => $productId,
-                    'quantity'   => $item['quantity'],
-                    'unit_price' => $item['price'],
-                ]);
-                // Reduce stock quantity
-                $product->stock_quantity = max(0, $product->stock_quantity - $item['quantity']);
-                $product->save();
-            }
+            // Clear session cart
+            session()->forget('cart');
+
+            return response()->json([
+                'success'  => true,
+                'message'  => 'Order created successfully',
+                'order_id' => $order->id,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Order creation failed: ' . $e->getMessage());
+            return response()->json(['error' => 'Order creation failed'], 500);
         }
-
-        // Clear session cart
-        session()->forget('cart');
-
-        return response()->json([
-            'success'  => true,
-            'message'  => 'Order created successfully',
-            'order_id' => $order->id,
-        ]);
     }
 }
