@@ -1,8 +1,15 @@
+@php
+    // The Aston host currently serves the root URL inconsistently, while
+    // /index.php correctly boots Laravel. Use an absolute path so the
+    // browser never turns it into /index.php/index.php.
+    $homeUrl = '/index.php';
+@endphp
+
 <div class="TopNav">
-    <a class="logo-link" href="/" aria-label="Skyrose Atelier home">
+    <a class="logo-link" href="{{ $homeUrl }}" aria-label="Skyrose Atelier home">
         <img class="header-logo" src="{{ asset('images/logo Skyrose.jpg') }}" alt="Skyrose Atelier logo" style="height:48px;width:auto;">
     </a>
-    <a href="/">Home</a>
+    <a href="{{ $homeUrl }}">Home</a>
     <a href="/about">About</a>
     <a href="/products">Products</a>
     <a href="/contact">Contact</a>
