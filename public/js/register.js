@@ -17,9 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': getCsrfToken()
             },
             body: JSON.stringify({
+                username: formData.get('username'),
                 name: formData.get('fullName') || formData.get('username'),
                 email: formData.get('email'),
                 password: formData.get('password'),
@@ -32,7 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = data.redirect || '/';
                 } else {
                     if (errorMsg) {
-                        errorMsg.textContent = data.error || 'Registration failed.';
+                        const firstError = data.errors
+                            ? Object.values(data.errors)[0][0]
+                            : (data.error || data.message || 'Registration failed.');
+                        errorMsg.textContent = firstError;
                         errorMsg.classList.remove('hidden');
                     }
                 }
