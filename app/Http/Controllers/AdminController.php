@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -49,7 +50,8 @@ class AdminController extends Controller
         $lowStockProducts = Product::whereColumn('stock_quantity', '<=', 'stock_threshold')->get();
 
         $recentRefundRequests = \App\Models\RefundRequest::with('order', 'user')->orderBy('created_at', 'desc')->limit(10)->get();
-        return view('admin.dashboard', compact('totalOrders', 'totalProducts', 'totalUsers', 'recentOrders', 'lowStockProducts', 'recentRefundRequests'));
+        $recentMessages = ContactMessage::orderBy('created_at', 'desc')->limit(20)->get();
+        return view('admin.dashboard', compact('totalOrders', 'totalProducts', 'totalUsers', 'recentOrders', 'lowStockProducts', 'recentRefundRequests', 'recentMessages'));
     }
 
     public function orders(Request $request)
@@ -91,5 +93,11 @@ class AdminController extends Controller
     {
         session(['dismiss_low_stock_alert' => true]);
         return response()->json(['success' => true]);
+    }
+
+    public function markMessageRead($id)
+    {
+        ContactMessage::findOrFail($id)->update(['is_read' => true]);
+        return back()->with('success', 'Message marked as read.');
     }
 }

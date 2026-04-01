@@ -46,7 +46,7 @@
                         <span aria-hidden="true">•</span>
                         <a href="/products">Products</a>
                         <span aria-hidden="true">•</span>
-                        <a href="/">Home</a>
+                        <a href="/index.php">Home</a>
                     </li>
                 </ul>
             </div>

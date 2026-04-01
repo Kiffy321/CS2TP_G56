@@ -141,6 +141,37 @@ class OrderController extends Controller
     }
 
     /**
+     * Cancel an order. Only allowed when pending or processing.
+     */
+    public function cancel($id)
+    {
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Please log in first'], 401);
+        }
+
+        $query = Order::where('id', $id);
+        if (!auth()->user()->is_admin) {
+            $query->where('user_id', auth()->id());
+        }
+        $order = $query->with('items.product')->firstOrFail();
+
+        if (!in_array($order->status, ['pending', 'processing'])) {
+            return response()->json(['error' => 'Only pending or processing orders can be cancelled'], 400);
+        }
+
+        // Restock products
+        foreach ($order->items as $item) {
+            if ($item->product) {
+                $item->product->increment('stock_quantity', $item->quantity);
+            }
+        }
+
+        $order->update(['status' => 'cancelled']);
+
+        return response()->json(['success' => true, 'message' => 'Order cancelled successfully']);
+    }
+
+    /**
      * Display the current user's orders.
      */
     public function myOrders()

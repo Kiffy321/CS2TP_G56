@@ -6,18 +6,18 @@
     <title>Admin Dashboard – Skyrose Atelier</title>
     @include('partials.head')
     <style>
-        .AdminPage { max-width: 1200px; margin: 80px auto 60px; padding: 0 24px 60px; }
-        .AdminPage h1 { font-size: 32px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
-        .AdminSubnav { display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap; }
+        .AdminPage { max-width: 1200px; margin: 100px auto 80px; padding: 0 32px 80px; }
+        .AdminPage h1 { font-size: 32px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; }
+        .AdminSubnav { display: flex; gap: 10px; margin-bottom: 48px; flex-wrap: wrap; }
         .AdminSubnav a { display: inline-block; font-size: 14px; font-weight: 600; text-decoration: none; padding: 8px 20px; border-radius: 4px; border: 2px solid #c8c389; color: #c8c389; transition: all 0.2s; }
         .AdminSubnav a:hover, .AdminSubnav a.active { background: #c8c389; color: #fff; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom: 40px; }
-        .stat-card { background: #fff; border: 1px solid #e8e0d0; border-radius: 8px; padding: 28px; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom: 56px; }
+        .stat-card { background: #fff; border: 1px solid #e8e0d0; border-radius: 8px; padding: 32px 28px; text-align: center; }
         .stat-card .number { font-size: 42px; font-weight: 700; color: #c8c389; }
-        .stat-card .label { font-size: 14px; color: #666; margin-top: 6px; }
+        .stat-card .label { font-size: 14px; color: #666; margin-top: 8px; }
 
-        .section-title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+        .section-title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin: 52px 0 18px; }
         .orders-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e8e0d0; }
         .orders-table th { background: #1a1a1a; color: #fff; padding: 13px 16px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; }
         .orders-table td { padding: 13px 16px; border-bottom: 1px solid #f5f0e8; font-size: 14px; color: #444; }
@@ -30,6 +30,8 @@
         .status-completed  { background: #d4edda; color: #155724; }
         .status-cancelled  { background: #f8d7da; color: #721c24; }
         .status-refunded   { background: #e2d9f3; color: #432874; }
+        .msg-unread td { background: #fffbf0; font-weight: 600; }
+        .msg-unread td:first-child::before { content: '● '; color: #c8c389; font-size: 10px; }
     </style>
 </head>
 <body>
@@ -82,7 +84,7 @@
                     </div>
                 </div>
 
-                <div class="section-title">Recent Orders</div>
+                <div class="section-title" style="margin-top:0;">Recent Orders</div>
                 <table class="orders-table">
                     <thead>
                         <tr>
@@ -130,6 +132,49 @@
                         </tr>
                         @empty
                         <tr><td colspan="5" style="text-align:center;color:#999;">No refund or return requests yet.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+
+                <div class="section-title">
+                    Contact Messages
+                    @php $unread = $recentMessages->where('is_read', false)->count(); @endphp
+                    @if($unread)
+                        <span style="font-size:13px;font-weight:600;background:#c8c389;color:#fff;padding:2px 10px;border-radius:20px;margin-left:10px;">{{ $unread }} new</span>
+                    @endif
+                </div>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Message</th>
+                            <th>Received</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($recentMessages as $msg)
+                        <tr class="{{ $msg->is_read ? '' : 'msg-unread' }}">
+                            <td>{{ $msg->name }}</td>
+                            <td>{{ $msg->email }}</td>
+                            <td>{{ $msg->phone ?? '—' }}</td>
+                            <td style="max-width:340px;white-space:pre-wrap;word-break:break-word;">{{ $msg->message }}</td>
+                            <td style="white-space:nowrap;">{{ $msg->created_at->format('d M Y H:i') }}</td>
+                            <td>
+                                @if(!$msg->is_read)
+                                <form method="POST" action="{{ route('admin.messages.read', $msg->id) }}">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" style="font-size:12px;padding:4px 12px;border:1px solid #c8c389;background:#fff;border-radius:4px;cursor:pointer;color:#1a1a1a;">Mark read</button>
+                                </form>
+                                @else
+                                    <span style="color:#aaa;font-size:12px;">Read</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="6" style="text-align:center;color:#999;">No messages yet.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

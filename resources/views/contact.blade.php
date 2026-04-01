@@ -232,7 +232,7 @@ contactForm.addEventListener('submit', e => {
     fetch('/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-        body: JSON.stringify({ name: nameInput.value, email: emailInput.value, message: messageInput.value })
+        body: JSON.stringify({ name: nameInput.value, email: emailInput.value, phone: document.getElementById('phone').value, message: messageInput.value })
     })
     .then(r => r.json())
     .then(d => { responseEl.textContent = d.message || 'Message sent!'; })

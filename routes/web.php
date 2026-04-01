@@ -48,7 +48,13 @@ Route::get('/category/watches',   fn() => view('watches'))->name('category.watch
 // Redirect old /products?product=slug URLs to /products, and always use controller for /products
 Route::get('/products', function () {
     if (request()->has('product')) {
-        return redirect('/products');
+        $slug = request('product');
+        $product = \App\Models\Product::all()->first(
+            fn($p) => \Illuminate\Support\Str::slug($p->name) === strtolower($slug)
+        );
+        if ($product) {
+            return redirect("/products/{$product->id}");
+        }
     }
     // Forward to controller for product listing
     return app(\App\Http\Controllers\ProductController::class)->index();
@@ -72,7 +78,7 @@ Route::post('/chatbot/message', [ChatbotController::class, 'respond'])->name('ch
 
 /*
 |-----------------------------------------------------------------------
-| Auth (custom JSON endpoints used by leila's JS)
+| Authentication (custom login/register + JSON status endpoints)
 |-----------------------------------------------------------------------
 */
 Route::get('/login',    fn() => view('auth.login'))->name('login');
@@ -148,6 +154,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Dismiss low stock alert
     Route::post('/dismiss-low-stock-alert', [AdminController::class, 'dismissLowStockAlert'])->name('dismissLowStockAlert');
+
+    // Mark contact message as read
+    Route::patch('/messages/{id}/read', [AdminController::class, 'markMessageRead'])->name('messages.read');
 });
 
 /*

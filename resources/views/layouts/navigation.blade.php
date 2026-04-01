@@ -14,6 +14,17 @@
                         <img src="{{ asset('images/orderconfirmed.png') }}" alt="Customer Orders" class="w-6 h-6 mr-2" style="display:inline-block;vertical-align:middle;" />
                         Customer Orders
                     </a>
+                    {{-- Show these icons only on the products page for admin --}}
+                    @if(request()->routeIs('products.index'))
+                        <a href="{{ route('admin.orders') }}" class="flex items-center text-gray-700 hover:text-gray-900" title="All Orders">
+                            <img src="{{ asset('images/orderconfirmed.png') }}" alt="All Orders" class="w-6 h-6 mr-2" style="display:inline-block;vertical-align:middle;" />
+                            All Orders
+                        </a>
+                        <a href="{{ route('wishlist') }}" class="flex items-center text-gray-700 hover:text-gray-900" title="Wishlist">
+                            <img src="{{ asset('images/WishlistIcon.png') }}" alt="Wishlist" class="w-6 h-6 mr-2" style="display:inline-block;vertical-align:middle;" />
+                            Wishlist
+                        </a>
+                    @endif
                 @else
                     <a href="{{ route('orders.my') }}" class="flex items-center text-gray-700 hover:text-gray-900">
                         <img src="{{ asset('images/orderconfirmed.png') }}" alt="My Orders" class="w-6 h-6 mr-2" style="display:inline-block;vertical-align:middle;" />

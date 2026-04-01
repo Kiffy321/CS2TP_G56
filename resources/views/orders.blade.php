@@ -59,8 +59,8 @@
         <button onclick="cancelOrder({{ $order->id }})" class="ActionBtn cancel">Cancel</button>
     @endif
 
-    {{-- Return button for delivered orders --}}
-    @if(true)
+    {{-- Return button for delivered/completed orders --}}
+    @if(in_array($order->status, ['delivered', 'completed']))
         <button onclick="requestReturn({{ $order->id }})" class="ActionBtn return">Return</button>
     @endif
 </td>
@@ -96,17 +96,19 @@
             .catch(() => showToast('An error occurred.'));
         }
 
-       function requestReturn(orderId) {
-    if (!confirm('Request a return for this order?')) return;
-
-    showToast('Submitting return request...');
-
-    setTimeout(() => {
-        showToast('Return request sent!');
-    }, 1000);
-
-    console.log('Return requested for order:', orderId);
-}
+        function requestReturn(orderId) {
+            if (!confirm('Request a return for this order?')) return;
+            fetch(`/orders/${orderId}/return`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) { showToast('Return request submitted.'); setTimeout(() => location.reload(), 1000); }
+                else showToast('Error: ' + (data.error || 'Could not submit return.'));
+            })
+            .catch(() => showToast('An error occurred.'));
+        }
 
 
 

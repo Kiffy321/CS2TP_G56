@@ -32,6 +32,12 @@ class ProductForm
                     ->required()
                     ->numeric()
                     ->default(0),
+                TextInput::make('stock_threshold')
+                    ->label('Low Stock Alert Threshold')
+                    ->required()
+                    ->numeric()
+                    ->default(5)
+                    ->helperText('Widget will flag this product when stock falls to or below this number.'),
             ]);
     }
 }

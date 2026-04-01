@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('refund_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('order_id');
+            $table->unsignedInteger('user_id');
             $table->string('type')->default('refund'); // refund or return
             $table->string('status')->default('pending'); // pending, processed, rejected
             $table->text('reason')->nullable();

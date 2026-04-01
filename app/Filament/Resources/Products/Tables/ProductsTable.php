@@ -27,7 +27,13 @@ class ProductsTable
                     ->searchable(),
                 ImageColumn::make('image_url'),
                 TextColumn::make('stock_quantity')
-                    ->numeric()
+                    ->label('Stock')
+                    ->badge()
+                    ->color(fn ($state, $record) => match(true) {
+                        $state === 0 => 'danger',
+                        $state <= $record->stock_threshold => 'warning',
+                        default => 'success',
+                    })
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

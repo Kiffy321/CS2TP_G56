@@ -49,21 +49,7 @@
     <div class="PageContent">
 
     <!-- Top Navigation -->
-        <div class="TopNav">
-            <a class="logo-link" href="/" aria-label="Skyrose Atelier home"><img class="header-logo" src="{{ asset('images/logo Skyrose.jpg') }}" alt="Skyrose Atelier logo"></a>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/products">Products</a>
-            <a href="/contact">Contact</a>
-
-                <div class="IconNav">
-                    <a class="NavSearch" href="/products#searchInput" aria-label="Search"><img src="{{ asset('images/SearchIcon.png') }}" alt="Search"></a>
-                    <div id="auth-buttons">
-                        <a href="/login" aria-label="Login"><img src="{{ asset('images/ProfileIcon.png') }}" alt="Profile"></a>
-                        <a href="/cart" aria-label="Cart"><img src="{{ asset('images/CartIcon.png') }}" alt="Cart"><span id="cart-count" style="display:inline-block;margin-left:6px;color:#111;">0</span></a>
-                    </div>
-                </div>
-</div>
+        @include('partials.nav')
 
 <section class="TitleSection">
         <h1 class="MainTitle">Our Jewellery Collection</h1>
@@ -90,7 +76,7 @@
 <!-- Products Grid (uses CSS in css/index.css) -->
 <main class="ProductsGrid" id="productsGrid" aria-label="Product list">
     @foreach($products as $product)
-        <a class="ProductCard" href="/products?product={{ Str::slug($product->name) }}" data-name="{{ $product->name }}" data-category="{{ $product->category }}">
+        <a class="ProductCard" href="/products/{{ $product->id }}" data-name="{{ $product->name }}" data-category="{{ $product->category }}">
             <div class="ProductImageWrap">
                 <img class="ProductImage" src="{{ asset($product->image_url) }}" alt="{{ $product->name }}">
                 <span class="ProductBadge">{{ $product->category }}</span>

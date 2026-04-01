@@ -14,7 +14,7 @@
             <div class="AuthPage">
                 <div class="AuthCard">
                     <h1 class="AuthTitle">Register</h1>
-                    <form action="{{ route('register.post') }}" method="POST" class="AuthForm" id="register-form">
+                    <form action="{{ route('register-custom.post') }}" method="POST" class="AuthForm" id="register-form">
                         @csrf
                         <div class="form-group">
                             <label for="name">Full Name</label>
@@ -96,7 +96,7 @@
             const formData = new FormData(e.target);
             
             // send form data to backend register API
-            fetch('{{ route("register.post") }}', {
+            fetch('{{ route("register-custom.post") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

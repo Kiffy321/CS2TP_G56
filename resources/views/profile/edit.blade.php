@@ -142,6 +142,10 @@
                     </form>
                 </div>
 
+
+                {{-- Admin Dashboard Link --}}
+                @include('profile.partials.admin-dashboard-link')
+
                 {{-- Orders history removed for admin profile --}}
 
                 {{-- Logout --}}

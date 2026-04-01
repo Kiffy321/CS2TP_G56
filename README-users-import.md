@@ -7,10 +7,11 @@ mysql -u username -p database_name < database/users.sql
 ```
 
 This will import the users from the provided SQL file into your database.
+The import file now creates the `users` table if it does not exist and adds any missing user columns before inserting the demo records.
 
 **Note:**
 - Only use this file for test/demo data. Do not use real user data in public repositories.
-- Make sure your database schema matches the structure of the exported users table.
+- Existing users with the same email will be updated instead of causing the import to fail.
 
 The default MySQL username is usually root and the password is often blank (just press Enter when prompted).
 

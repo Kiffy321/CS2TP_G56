@@ -27,32 +27,8 @@
       .catch(err => console.error('Session init error:', err));
   }
 
-  // --- Auth UI injection ---
-  function initAuth(){
-    fetch('/auth/status', { credentials: 'include' })
-      .then(r => r.json())
-      .then(data => {
-        const iconNav = document.getElementById('auth-buttons') || document.querySelector('.IconNav');
-        if (!iconNav) return;
-        if (data.loggedIn) {
-          const adminIcon = data.is_admin
-            ? `<a href="/admin/orders" aria-label="Customer Orders" style="margin-right:6px;"><img src="/images/orderconfirmed.png" alt="Admin Orders" style="width:28px;height:28px;vertical-align:middle;"></a>`
-            : '';
-          iconNav.innerHTML = `<a href="/profile" class="NavHello">Hello, ${escapeHtml(data.username)}</a>
-                               <a href="/profile" aria-label="My Profile" style="margin-right:10px"><img src="/images/ProfileIcon.png" alt="Profile" style="width:28px;height:28px;vertical-align:middle;"></a>
-                               ${adminIcon}
-                               <a href="/cart"><img src="/images/CartIcon.png" alt="Cart"></a>`;
-        } else {
-          iconNav.innerHTML = `<a href="/login"><img src="/images/ProfileIcon.png" alt="Login"></a>
-                               <a href="/cart"><img src="/images/CartIcon.png" alt="Cart"></a>`;
-        }
-      })
-      .catch(()=>{});
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ initSession(); initAuth(); initNavSearch(); });
-  else { initSession(); initAuth(); initNavSearch(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ initSession(); initNavSearch(); });
+  else { initSession(); initNavSearch(); }
 
   // --- Expanding nav search ---
   function initNavSearch(){
@@ -127,6 +103,7 @@ function getCsrfToken() {
 
 // Toast notification for cart actions
 function showCartToast(msg) {
+  var display = (msg && msg.length > 100) ? 'Unable to add to cart. Please try again.' : msg;
   var toast = document.getElementById('cart-toast');
   if (!toast) {
     toast = document.createElement('div');
@@ -134,7 +111,7 @@ function showCartToast(msg) {
     toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 24px;border-radius:4px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;';
     document.body.appendChild(toast);
   }
-  toast.textContent = msg;
+  toast.textContent = display;
   toast.style.opacity = '1';
   clearTimeout(toast._ct);
   toast._ct = setTimeout(function() { toast.style.opacity = '0'; }, 2500);

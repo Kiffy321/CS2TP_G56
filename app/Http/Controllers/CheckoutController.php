@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
@@ -23,7 +24,11 @@ class CheckoutController extends Controller
         }
 
         $cart = session('cart', []);
-        if (empty($cart)) {
+        $dbCart = auth()->check()
+            ? Cart::where('user_id', auth()->id())->with('product')->get()
+            : collect();
+
+        if (empty($cart) && $dbCart->isEmpty()) {
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json(['error' => 'Your cart is empty'], 400);
             }
@@ -51,13 +56,23 @@ class CheckoutController extends Controller
             'notes'            => 'nullable|string|max:500',
         ]);
 
-        $cart = session('cart', []);
-        if (empty($cart)) {
-            return response()->json(['error' => 'Your cart is empty'], 400);
+        // Load cart: DB for authenticated users, session for guests
+        $dbCart = Cart::where('user_id', auth()->id())->with('product')->get();
+        $useDbCart = $dbCart->isNotEmpty();
+
+        if (!$useDbCart) {
+            $cart = session('cart', []);
+            if (empty($cart)) {
+                return response()->json(['error' => 'Your cart is empty'], 400);
+            }
         }
 
-        // Calculate total from session cart
-        $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+        // Calculate total
+        if ($useDbCart) {
+            $total = $dbCart->sum(fn($c) => ($c->product->price ?? 0) * $c->quantity);
+        } else {
+            $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+        }
 
         try {
             // Create order
@@ -72,32 +87,45 @@ class CheckoutController extends Controller
             ]);
 
             // Create order items and reduce product stock
-            foreach ($cart as $item) {
-                $productId = $item['product_id'] ?? null;
-                $product = null;
-                if (!$productId) {
-                    // Fallback: look up product by name
-                    $product = Product::where('name', $item['name'])->first();
-                    $productId = $product?->id;
-                } else {
-                    $product = Product::find($productId);
+            if ($useDbCart) {
+                foreach ($dbCart as $cartItem) {
+                    $product = $cartItem->product;
+                    if ($product) {
+                        OrderItem::create([
+                            'order_id'   => $order->id,
+                            'product_id' => $product->id,
+                            'quantity'   => $cartItem->quantity,
+                            'unit_price' => $product->price,
+                        ]);
+                        $product->stock_quantity = max(0, $product->stock_quantity - $cartItem->quantity);
+                        $product->save();
+                    }
                 }
+                Cart::where('user_id', auth()->id())->delete();
+            } else {
+                foreach ($cart as $item) {
+                    $productId = $item['product_id'] ?? null;
+                    $product = null;
+                    if (!$productId) {
+                        $product = Product::where('name', $item['name'])->first();
+                        $productId = $product?->id;
+                    } else {
+                        $product = Product::find($productId);
+                    }
 
-                if ($productId && $product) {
-                    OrderItem::create([
-                        'order_id'   => $order->id,
-                        'product_id' => $productId,
-                        'quantity'   => $item['quantity'],
-                        'unit_price' => $item['price'],
-                    ]);
-                    // Reduce stock quantity
-                    $product->stock_quantity = max(0, $product->stock_quantity - $item['quantity']);
-                    $product->save();
+                    if ($productId && $product) {
+                        OrderItem::create([
+                            'order_id'   => $order->id,
+                            'product_id' => $productId,
+                            'quantity'   => $item['quantity'],
+                            'unit_price' => $item['price'],
+                        ]);
+                        $product->stock_quantity = max(0, $product->stock_quantity - $item['quantity']);
+                        $product->save();
+                    }
                 }
+                session()->forget('cart');
             }
-
-            // Clear session cart
-            session()->forget('cart');
 
             return response()->json([
                 'success'  => true,
