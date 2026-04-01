@@ -68,6 +68,32 @@
         .OrdersEmpty { text-align: center; padding: 40px 0; color: #aaa; font-size: 14px; }
         .OrderDetailLink { color: #d4af37; text-decoration: none; font-weight: 600; font-size: 12px; }
         .OrderDetailLink:hover { text-decoration: underline; }
+
+        /* Admin link */
+        .AdminLink {
+            display: flex !important; align-items: center; gap: 10px;
+            padding: 13px 18px; background: #fffbf0; border: 1px solid #d4af37;
+            border-radius: 8px; text-decoration: none !important; color: #8a6a00 !important;
+            font-weight: 600; font-size: 14px; transition: background 0.2s, border-color 0.2s;
+        }
+        .AdminLink:hover { background: #fff3cc !important; border-color: #b8941f; color: #6b5000 !important; }
+        .AdminLink svg { flex-shrink: 0; }
+
+        /* Logout card */
+        .ProfileCard.logout-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .logout-card .logout-info h2 { margin-bottom: 4px; }
+        .logout-card .logout-info p { font-size: 13px; color: #888; margin: 0; }
+        .ProfileBtnOutline {
+            padding: 10px 22px; background: transparent; color: #555;
+            border: 1.5px solid #ccc; border-radius: 6px; font-size: 14px; font-weight: 600;
+            cursor: pointer; white-space: nowrap; transition: border-color 0.2s, color 0.2s; flex-shrink: 0;
+        }
+        .ProfileBtnOutline:hover { border-color: #888; color: #222; }
+
+        /* Danger zone */
+        .ProfileCard.danger-card { border-color: #f5c2c7; background: #fff8f8; }
+        .danger-card h2 { color: #842029 !important; border-bottom-color: #f5c2c7 !important; }
+        .danger-card p { font-size: 13px; color: #7a4a4a; margin: 0 0 16px 0; }
     </style>
 </head>
 <body>
@@ -144,29 +170,42 @@
 
 
                 {{-- Admin Dashboard Link --}}
-                @include('profile.partials.admin-dashboard-link')
-
-                {{-- Orders history removed for admin profile --}}
+                @if(auth()->user() && (auth()->user()->is_admin ?? false))
+                    <div class="ProfileCard" style="padding: 20px 32px;">
+                        <a href="{{ route('admin.dashboard') }}" class="AdminLink">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            Go to Admin Dashboard
+                        </a>
+                    </div>
+                @endif
 
                 {{-- Logout --}}
-                <div class="ProfileCard" style="text-align:center;">
+                <div class="ProfileCard logout-card">
+                    <div class="logout-info">
+                        <h2 style="border-bottom:none;padding-bottom:0;margin-bottom:4px;">Sign Out</h2>
+                        <p>You will be logged out of your account on this device.</p>
+                    </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="ProfileBtnDanger" style="width:100%;padding:14px;font-size:15px;">Log Out</button>
+                        <button type="submit" class="ProfileBtnOutline">Log Out</button>
                     </form>
                 </div>
 
                 {{-- Delete Account --}}
-                <div class="ProfileCard">
-                    <h2 style="color:#842029;">Delete Account</h2>
-                    <p style="font-size:13px;color:#666;margin:0 0 16px 0;">Once your account is deleted, all data will be permanently removed. This cannot be undone.</p>
+                @unless(auth()->user()->is_admin)
+                <div class="ProfileCard danger-card">
+                    <h2>Delete Account</h2>
+                    <p>Once your account is deleted, all data will be permanently removed. This cannot be undone.</p>
                     <form class="ProfileForm" method="POST" action="{{ route('profile.destroy') }}"
                           onsubmit="return confirm('Delete your account? This cannot be undone.');">
                         @csrf
                         @method('DELETE')
 
                         <div>
-                            <label for="del_password">Confirm your password</label>
+                            <label for="del_password">Confirm Your Password</label>
                             <input id="del_password" name="password" type="password" autocomplete="current-password">
                             @error('password', 'userDeletion') <p style="color:#b91c1c;font-size:12px;margin-top:4px;">{{ $message }}</p> @enderror
                         </div>
@@ -174,6 +213,7 @@
                         <button type="submit" class="ProfileBtnDanger">Delete My Account</button>
                     </form>
                 </div>
+                @endunless
             </div>
         </div>
 
