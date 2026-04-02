@@ -32,6 +32,8 @@
         .status-refunded   { background: #e2d9f3; color: #432874; }
         .msg-unread td { background: #fffbf0; font-weight: 600; }
         .msg-unread td:first-child::before { content: '● '; color: #c8c389; font-size: 10px; }
+        .view-link { color: #111; font-weight: 700; text-decoration: none; font-size: 13px; }
+        .view-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -93,6 +95,7 @@
                             <th>Total</th>
                             <th>Status</th>
                             <th>Date</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,9 +106,10 @@
                             <td>&pound;{{ number_format($order->total_price ?? $order->total_amount, 2) }}</td>
                             <td><span class="status-badge status-{{ $order->status }}">{{ $order->status }}</span></td>
                             <td>{{ $order->created_at->format('d M Y') }}</td>
+                            <td><a href="{{ route('orders.show', $order->id) }}" class="view-link">View &rarr;</a></td>
                         </tr>
                         @empty
-                        <tr><td colspan="5" style="text-align:center;color:#999;">No orders yet.</td></tr>
+                        <tr><td colspan="6" style="text-align:center;color:#999;">No orders yet.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

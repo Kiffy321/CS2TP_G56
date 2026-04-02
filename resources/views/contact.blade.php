@@ -234,9 +234,22 @@ contactForm.addEventListener('submit', e => {
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
         body: JSON.stringify({ name: nameInput.value, email: emailInput.value, phone: document.getElementById('phone').value, message: messageInput.value })
     })
-    .then(r => r.json())
-    .then(d => { responseEl.textContent = d.message || 'Message sent!'; })
-    .catch(() => { responseEl.textContent = 'Failed to send message.'; });
+    .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
+    .then(({ ok, data }) => {
+        if (ok && data.success) {
+            responseEl.style.color = 'green';
+            responseEl.textContent = data.message || 'Message sent!';
+            contactForm.reset();
+        } else if (data.errors) {
+            responseEl.style.color = 'red';
+            const msgs = Object.values(data.errors).flat();
+            responseEl.textContent = msgs.join(' ');
+        } else {
+            responseEl.style.color = 'red';
+            responseEl.textContent = data.message || 'Failed to send message.';
+        }
+    })
+    .catch(() => { responseEl.style.color = 'red'; responseEl.textContent = 'Failed to send message. Please try again later.'; });
 });
 </script>
 </body>
