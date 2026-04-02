@@ -33,24 +33,14 @@
   // --- Expanding nav search ---
   function initNavSearch(){
     document.querySelectorAll('.NavSearchWrap').forEach(function(wrap){
-      const btn = wrap.querySelector('.NavSearchBtn');
-      const input = wrap.querySelector('.NavSearchInput');
-      if (!btn || !input) return;
-      btn.addEventListener('click', function(){
-        wrap.classList.toggle('open');
-        if (wrap.classList.contains('open')) input.focus();
-      });
+      var input = wrap.querySelector('.NavSearchInput');
+      var btn   = wrap.querySelector('.NavSearchBtn');
+      if (!input) return;
+      if (btn) btn.addEventListener('click', function(){ input.focus(); });
       input.addEventListener('keydown', function(e){
         if (e.key === 'Enter' && input.value.trim()) {
           window.location.href = '/products?q=' + encodeURIComponent(input.value.trim());
         }
-        if (e.key === 'Escape') {
-          wrap.classList.remove('open');
-          btn.focus();
-        }
-      });
-      document.addEventListener('click', function(e){
-        if (!wrap.contains(e.target)) wrap.classList.remove('open');
       });
     });
   }

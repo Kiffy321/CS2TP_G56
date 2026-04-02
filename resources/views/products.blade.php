@@ -242,7 +242,16 @@ document.addEventListener('DOMContentLoaded', showProductDetail);
 
 // Search functionality (only run if we're not viewing a specific product)
 if (document.getElementById('searchInput')) {
-    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+    const searchInput = document.getElementById('searchInput');
+
+    // Pre-populate from ?q= URL param and trigger filter
+    const _qParam = new URLSearchParams(window.location.search).get('q');
+    if (_qParam) {
+        searchInput.value = _qParam;
+        searchInput.dispatchEvent(new Event('keyup'));
+    }
+
+    searchInput.addEventListener('keyup', function(e) {
         const query = e.target.value.toLowerCase();
         const products = document.querySelectorAll('.ProductCard');
         

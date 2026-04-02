@@ -75,39 +75,62 @@
         @include('partials.footer')
     </div>
 
+    <dialog id="confirmDialog" style="border:none;border-radius:10px;padding:32px 28px;max-width:380px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;font-family:inherit;">
+        <p id="confirmMsg" style="font-size:17px;color:#1a1a1a;font-weight:700;margin:0 0 6px;"></p>
+        <p id="confirmSub" style="font-size:13px;color:#888;margin:0 0 24px;"></p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button id="confirmCancel" style="padding:10px 24px;border:1px solid #ccc;background:#f5f5f5;color:#555;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
+            <button id="confirmOk" style="padding:10px 24px;border:none;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;"></button>
+        </div>
+    </dialog>
+    <style>#confirmDialog::backdrop { background: rgba(0,0,0,0.45); }</style>
     <div class="Toast" id="toast"></div>
     <script>
+        function showConfirm(message, sub, okLabel, okColor, onConfirm) {
+            const dialog = document.getElementById('confirmDialog');
+            document.getElementById('confirmMsg').textContent = message;
+            document.getElementById('confirmSub').textContent = sub || '';
+            const okBtn = document.getElementById('confirmOk');
+            const cancelBtn = document.getElementById('confirmCancel');
+            okBtn.textContent = okLabel || 'Confirm';
+            okBtn.style.background = okColor || '#111';
+            dialog.showModal();
+            okBtn.onclick = () => { dialog.close(); onConfirm(); };
+            cancelBtn.onclick = () => dialog.close();
+        }
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg; t.style.opacity = 1;
             setTimeout(() => t.style.opacity = 0, 3000);
         }
         function cancelOrder(orderId) {
-            if (!confirm('Cancel this order?')) return;
-            fetch(`/orders/${orderId}/cancel`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) { showToast('Order cancelled.'); setTimeout(() => location.reload(), 1000); }
-                else showToast('Error: ' + (data.error || 'Could not cancel.'));
-            })
-            .catch(() => showToast('An error occurred.'));
+            showConfirm('Cancel this order?', 'This action cannot be undone.', 'Cancel Order', '#dc3545', () => {
+                fetch(`/orders/${orderId}/cancel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) { showToast('Order cancelled.'); setTimeout(() => location.reload(), 1000); }
+                    else showToast('Error: ' + (data.error || 'Could not cancel.'));
+                })
+                .catch(() => showToast('An error occurred.'));
+            });
         }
 
         function requestReturn(orderId) {
-            if (!confirm('Request a return for this order?')) return;
-            fetch(`/orders/${orderId}/return`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) { showToast('Return request submitted.'); setTimeout(() => location.reload(), 1000); }
-                else showToast('Error: ' + (data.error || 'Could not submit return.'));
-            })
-            .catch(() => showToast('An error occurred.'));
+            showConfirm('Request a return for this order?', "We'll review your request shortly.", 'Request Return', '#b77b2b', () => {
+                fetch(`/orders/${orderId}/return`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) { showToast('Return request submitted.'); setTimeout(() => location.reload(), 1000); }
+                    else showToast('Error: ' + (data.error || 'Could not submit return.'));
+                })
+                .catch(() => showToast('An error occurred.'));
+            });
         }
 
 
