@@ -76,7 +76,7 @@
 <!-- Products Grid (uses CSS in css/index.css) -->
 <main class="ProductsGrid" id="productsGrid" aria-label="Product list">
     @foreach($products as $product)
-        <a class="ProductCard" href="/products/{{ $product->id }}" data-name="{{ $product->name }}" data-category="{{ $product->category }}">
+        <a class="ProductCard" href="/products/{{ $product->id }}" data-name="{{ $product->name }}" data-category="{{ $product->category }}" data-id="{{ $product->id }}">
             <div class="ProductImageWrap">
                 <img class="ProductImage" src="{{ asset($product->image_url) }}" alt="{{ $product->name }}">
                 <span class="ProductBadge">{{ $product->category }}</span>

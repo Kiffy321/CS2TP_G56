@@ -2,7 +2,7 @@
     $homeUrl = '/index.php';
 @endphp
 
-<div class="TopNav">
+<div class="TopNav" data-auth="{{ auth()->check() ? '1' : '0' }}">
     <a class="logo-link" href="{{ $homeUrl }}" aria-label="Skyrose Atelier home">
         <img class="header-logo" src="{{ asset('images/logo Skyrose.jpg') }}" alt="Skyrose Atelier logo" style="height:48px;width:auto;">
     </a>

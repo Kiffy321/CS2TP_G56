@@ -12,6 +12,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -101,6 +102,12 @@ Route::get('/register-custom', [AuthController::class, 'showRegister'])->name('r
 */
 Route::get('/wishlist', fn() => view('wishlist'))->name('wishlist');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist/data',    [WishlistController::class, 'data'])->name('wishlist.data');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/wishlist/check',   [WishlistController::class, 'check'])->name('wishlist.check');
+});
+
 /*
 |-----------------------------------------------------------------------
 | Cart (session-based, JSON responses)
@@ -112,7 +119,6 @@ Route::post('/cart/add',         [CartController::class, 'add'])->name('cart.add
 Route::post('/cart/update',      [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove',      [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear',       [CartController::class, 'clear'])->name('cart.clear');
-Route::post('/cart/place-order', [CartController::class, 'placeOrder'])->name('cart.placeOrder');
 
 /*
 |-----------------------------------------------------------------------

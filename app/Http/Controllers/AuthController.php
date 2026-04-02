@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,6 +30,30 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Merge any guest session cart into the user's DB cart
+            $sessionCart = session('cart', []);
+            if (!empty($sessionCart)) {
+                $userId = Auth::id();
+                foreach ($sessionCart as $item) {
+                    $productId = $item['product_id'] ?? null;
+                    if ($productId) {
+                        $existing = Cart::where('user_id', $userId)
+                            ->where('product_id', $productId)
+                            ->first();
+                        if ($existing) {
+                            $existing->increment('quantity', (int) $item['quantity']);
+                        } else {
+                            Cart::create([
+                                'user_id'    => $userId,
+                                'product_id' => $productId,
+                                'quantity'   => (int) $item['quantity'],
+                            ]);
+                        }
+                    }
+                }
+                session()->forget('cart');
+            }
 
             $redirect = Auth::user()->is_admin
                 ? route('admin.dashboard')
