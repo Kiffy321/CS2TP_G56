@@ -69,7 +69,7 @@ class AuthController extends Controller
         ]);
 
         $user = \App\Models\User::create([
-            'username' => $validated['username'] ?? null,
+            'username' => $validated['username'] ?? $validated['name'],
             'name'     => $validated['name'],
             'email'    => $validated['email'],
             'password' => $validated['password'],
