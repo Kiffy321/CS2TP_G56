@@ -35,6 +35,13 @@
                 <a href="{{ route('admin.dashboard') }}" aria-label="Admin Dashboard" title="Admin Dashboard">
                     <img src="{{ asset('images/inventory.png') }}" alt="Admin Dashboard" style="width:32px;height:32px;border-radius:50%;background:#fff3cd;padding:2px;vertical-align:middle;">
                 </a>
+                {{-- ADMIN: logout --}}
+                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                    @csrf
+                    <button type="submit" aria-label="Logout" title="Logout" style="background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;">
+                        <img src="{{ asset('images/ProfileIcon.png') }}" alt="Logout" style="opacity:0.7;">
+                    </button>
+                </form>
             @else
                 {{-- REGULAR USER: my orders + profile --}}
                 <a href="{{ route('orders.my') }}" aria-label="My Orders" title="My Orders">
