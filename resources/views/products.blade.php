@@ -163,6 +163,7 @@
 
     @include('partials.footer')
 <script src="{{ asset('js/index.js') }}?v=2" defer></script>
+<script src="{{ asset('js/wishlist.js') }}?v=2" defer></script>
 
 <script>
 // Check if we're viewing a specific product
