@@ -68,74 +68,70 @@
     <button class="NavToggle" id="nav-toggle" aria-label="Open navigation" style="display:none;">Navigation</button>
 </div>
 
-<div class="NavOverlay" id="nav-overlay" style="display:none;"></div>
-<div class="NavDrawer" id="nav-drawer" aria-hidden="true" style="display:none;">
-    <div class="NavDrawerHeader">
-        <span class="NavDrawerTitle">Navigation</span>
-        <button class="NavDrawerClose" id="nav-close" aria-label="Close navigation">&times;</button>
+<div id="nav-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1050;"></div>
+<div id="nav-drawer" aria-hidden="true" style="display:none;position:fixed;top:0;left:0;width:280px;height:100vh;background:#fff;z-index:1100;flex-direction:column;box-shadow:4px 0 24px rgba(0,0,0,0.15);transform:translateX(-100%);transition:transform 0.3s ease;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(200,195,137,0.9);border-bottom:1px solid rgba(0,0,0,0.08);flex-shrink:0;">
+        <span style="font-size:16px;font-weight:700;color:#111;">Navigation</span>
+        <button id="nav-close" aria-label="Close navigation" style="background:none;border:none;font-size:26px;cursor:pointer;color:#111;line-height:1;padding:0 4px;">&times;</button>
     </div>
 
     {{-- Top section: text page links --}}
-    <nav class="NavDrawerLinks">
-        <a href="{{ $homeUrl }}">Home</a>
-        <a href="/about">About</a>
-        <a href="/products">Products</a>
-        <a href="/contact">Contact</a>
+    <nav style="flex:1;display:flex;flex-direction:column;padding:8px 0;overflow-y:auto;border-bottom:2px solid rgba(200,195,137,0.6);">
+        <a href="{{ $homeUrl }}" style="padding:14px 24px;font-size:16px;color:#111;text-decoration:none;border-bottom:1px solid #f0f0f0;">Home</a>
+        <a href="/about" style="padding:14px 24px;font-size:16px;color:#111;text-decoration:none;border-bottom:1px solid #f0f0f0;">About</a>
+        <a href="/products" style="padding:14px 24px;font-size:16px;color:#111;text-decoration:none;border-bottom:1px solid #f0f0f0;">Products</a>
+        <a href="/contact" style="padding:14px 24px;font-size:16px;color:#111;text-decoration:none;border-bottom:1px solid #f0f0f0;">Contact</a>
         @auth
             @if(auth()->user()->is_admin)
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}" style="padding:14px 24px;font-size:16px;color:#111;text-decoration:none;border-bottom:1px solid #f0f0f0;">Dashboard</a>
             @endif
         @endauth
     </nav>
 
     {{-- Bottom section: icon/action links --}}
-    <div class="NavDrawerIcons">
-        <div class="NavDrawerSearchWrap">
-            <input type="text" class="NavSearchInput NavDrawerSearch" placeholder="Search products..." aria-label="Search products">
+    <div style="padding:12px 0;display:flex;flex-direction:column;gap:2px;">
+        <div style="padding:8px 16px 12px;">
+            <input type="text" class="NavSearchInput" placeholder="Search products..." aria-label="Search products" style="width:100%;box-sizing:border-box;">
         </div>
 
-        <a href="/wishlist" class="NavDrawerIconLink" aria-label="Wishlist">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
+        <a href="/wishlist" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#111;text-decoration:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             Wishlist
         </a>
-
-        <a href="/cart" class="NavDrawerIconLink" aria-label="Cart">
+        <a href="/cart" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#111;text-decoration:none;">
             <img src="{{ asset('images/CartIcon.png') }}" alt="" style="width:20px;height:20px;object-fit:contain;">
             Cart
         </a>
-
         @auth
             @if(auth()->user()->is_admin)
-                <a href="{{ route('admin.dashboard') }}" class="NavDrawerIconLink" aria-label="Admin Panel">
+                <a href="{{ route('admin.dashboard') }}" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#111;text-decoration:none;">
                     <img src="{{ asset('images/inventory.png') }}" alt="" style="width:20px;height:20px;object-fit:contain;border-radius:50%;">
                     Admin Panel
                 </a>
-                <a href="{{ route('profile.edit') }}" class="NavDrawerIconLink" aria-label="My Profile">
+                <a href="{{ route('profile.edit') }}" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#111;text-decoration:none;">
                     <img src="{{ asset('images/ProfileIcon.png') }}" alt="" style="width:20px;height:20px;object-fit:contain;">
                     Profile
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                     @csrf
-                    <button type="submit" class="NavDrawerIconLink NavDrawerLogout">Logout</button>
+                    <button type="submit" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#b91c1c;background:none;border:none;cursor:pointer;font-family:inherit;width:100%;text-align:left;">Logout</button>
                 </form>
             @else
-                <a href="{{ route('orders.my') }}" class="NavDrawerIconLink" aria-label="My Orders">
+                <a href="{{ route('orders.my') }}" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#111;text-decoration:none;">
                     <img src="{{ asset('images/orderconfirmed.png') }}" alt="" style="width:20px;height:20px;object-fit:contain;">
                     My Orders
                 </a>
-                <a href="{{ route('profile.edit') }}" class="NavDrawerIconLink" aria-label="My Profile">
+                <a href="{{ route('profile.edit') }}" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#111;text-decoration:none;">
                     <img src="{{ asset('images/ProfileIcon.png') }}" alt="" style="width:20px;height:20px;object-fit:contain;">
                     Profile
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                     @csrf
-                    <button type="submit" class="NavDrawerIconLink NavDrawerLogout">Logout</button>
+                    <button type="submit" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#b91c1c;background:none;border:none;cursor:pointer;font-family:inherit;width:100%;text-align:left;">Logout</button>
                 </form>
             @endif
         @else
-            <a href="/login" class="NavDrawerIconLink" aria-label="Login">
+            <a href="/login" style="display:flex;align-items:center;gap:12px;padding:10px 24px;font-size:14px;color:#111;text-decoration:none;">
                 <img src="{{ asset('images/ProfileIcon.png') }}" alt="" style="width:20px;height:20px;object-fit:contain;">
                 Login
             </a>
@@ -167,14 +163,14 @@
         overlay.style.display = 'block';
         drawer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        setTimeout(function(){ drawer.classList.add('open'); }, 10);
+        setTimeout(function(){ drawer.style.transform = 'translateX(0)'; }, 10);
     }
     function closeDrawer(){
-        drawer.classList.remove('open');
+        drawer.style.transform = 'translateX(-100%)';
         overlay.style.display = 'none';
         drawer.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
-        setTimeout(function(){ if(!drawer.classList.contains('open')) drawer.style.display = 'none'; }, 300);
+        setTimeout(function(){ drawer.style.display = 'none'; }, 300);
     }
     if(toggle) toggle.addEventListener('click', openDrawer);
     if(close) close.addEventListener('click', closeDrawer);
