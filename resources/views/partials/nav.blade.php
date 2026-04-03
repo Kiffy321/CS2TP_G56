@@ -64,12 +64,12 @@
         </a>
     </div>
 
-    {{-- Mobile-only "Navigation" button --}}
-    <button class="NavToggle" id="nav-toggle" aria-label="Open navigation">Navigation</button>
+    {{-- Mobile-only "Navigation" button (JS shows on mobile) --}}
+    <button class="NavToggle" id="nav-toggle" aria-label="Open navigation" style="display:none;">Navigation</button>
 </div>
 
-<div class="NavOverlay" id="nav-overlay"></div>
-<div class="NavDrawer" id="nav-drawer" aria-hidden="true">
+<div class="NavOverlay" id="nav-overlay" style="display:none;"></div>
+<div class="NavDrawer" id="nav-drawer" aria-hidden="true" style="display:none;">
     <div class="NavDrawerHeader">
         <span class="NavDrawerTitle">Navigation</span>
         <button class="NavDrawerClose" id="nav-close" aria-label="Close navigation">&times;</button>
@@ -148,17 +148,29 @@
     var drawer = document.getElementById('nav-drawer');
     var overlay = document.getElementById('nav-overlay');
     var close = document.getElementById('nav-close');
+
+    // Show the toggle button only on mobile
+    function checkMobile(){
+        if(toggle){
+            toggle.style.display = window.innerWidth <= 768 ? 'block' : 'none';
+        }
+    }
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     function openDrawer(){
-        drawer.classList.add('open');
-        overlay.classList.add('open');
+        drawer.style.display = 'flex';
+        overlay.style.display = 'block';
         drawer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        setTimeout(function(){ drawer.classList.add('open'); }, 10);
     }
     function closeDrawer(){
         drawer.classList.remove('open');
-        overlay.classList.remove('open');
+        overlay.style.display = 'none';
         drawer.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+        setTimeout(function(){ if(!drawer.classList.contains('open')) drawer.style.display = 'none'; }, 300);
     }
     if(toggle) toggle.addEventListener('click', openDrawer);
     if(close) close.addEventListener('click', closeDrawer);
