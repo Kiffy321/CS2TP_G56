@@ -12,6 +12,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,7 +39,10 @@ Route::get('/category/rings',     fn() => view('rings'))->name('category.rings')
 Route::get('/category/earrings',  fn() => view('earrings'))->name('category.earrings');
 Route::get('/category/bracelets', fn() => view('bracelets'))->name('category.bracelets');
 Route::get('/category/necklaces', fn() => view('necklaces'))->name('category.necklaces');
-Route::get('/category/watches',   fn() => view('watches'))->name('category.watches');
+Route::get('/category/watches',   function () {
+    $products = \App\Models\Product::whereIn('category', ['Watch', 'Watches'])->get();
+    return view('watches', ['products' => $products]);
+})->name('category.watches');
 
 /*
 |-----------------------------------------------------------------------
@@ -101,6 +105,12 @@ Route::get('/register-custom', [AuthController::class, 'showRegister'])->name('r
 */
 Route::get('/wishlist', fn() => view('wishlist'))->name('wishlist');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist/data',    [WishlistController::class, 'data'])->name('wishlist.data');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/wishlist/check',   [WishlistController::class, 'check'])->name('wishlist.check');
+});
+
 /*
 |-----------------------------------------------------------------------
 | Cart (session-based, JSON responses)
@@ -112,7 +122,6 @@ Route::post('/cart/add',         [CartController::class, 'add'])->name('cart.add
 Route::post('/cart/update',      [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove',      [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear',       [CartController::class, 'clear'])->name('cart.clear');
-Route::post('/cart/place-order', [CartController::class, 'placeOrder'])->name('cart.placeOrder');
 
 /*
 |-----------------------------------------------------------------------
@@ -157,6 +166,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Mark contact message as read
     Route::patch('/messages/{id}/read', [AdminController::class, 'markMessageRead'])->name('messages.read');
+
+    // Refund/Return requests
+    Route::get('/refund-requests',              [AdminController::class, 'refundRequests'])->name('refund-requests');
+    Route::patch('/refund-requests/{id}/status',[AdminController::class, 'updateRefundStatus'])->name('refund-requests.updateStatus');
 });
 
 /*

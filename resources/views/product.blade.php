@@ -203,7 +203,7 @@
 
     <div class="Toast" id="toast"></div>
 
-    <script src="{{ asset('js/wishlist.js') }}"></script>
+    <script src="{{ asset('js/wishlist.js') }}?v=2"></script>
     <script>
         const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const productName = @json($product->name);
@@ -239,29 +239,64 @@
             const wl = window.wishlist;
             if (!wl) return;
 
-            const imgEl = document.querySelector('.ProductDetailImage img');
-            const imgSrc = imgEl ? imgEl.src : '';
-            const catEl  = document.querySelector('.ProductDetailCategory');
-            const cat    = catEl ? catEl.textContent.trim() : '';
-
-            if (wl.isInWishlist(productName)) {
-                wl.removeFromWishlist(productName);
-                btn.classList.remove('active');
-                btn.innerHTML = '&#9825; Add to Wishlist';
-                showToast(productName + ' removed from wishlist');
-            } else {
-                wl.addToWishlist({
-                    name:     productName,
-                    price:    '£' + productPrice.toFixed(2),
-                    image:    imgSrc,
-                    link:     window.location.pathname,
-                    category: cat
+            if (wl.isLoggedIn && wl.isLoggedIn() && wl.apiToggle) {
+                wl.apiToggle(productId, function (inWishlist) {
+                    if (inWishlist) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '&#9829; In Wishlist';
+                        showToast(productName + ' added to wishlist');
+                    } else {
+                        btn.classList.remove('active');
+                        btn.innerHTML = '&#9825; Add to Wishlist';
+                        showToast(productName + ' removed from wishlist');
+                    }
                 });
-                btn.classList.add('active');
-                btn.innerHTML = '&#9829; In Wishlist';
-                showToast(productName + ' added to wishlist');
+            } else {
+                const imgEl = document.querySelector('.ProductDetailImage img');
+                const imgSrc = imgEl ? imgEl.src : '';
+                const catEl  = document.querySelector('.ProductDetailCategory');
+                const cat    = catEl ? catEl.textContent.trim() : '';
+
+                if (wl.isInWishlist(productName)) {
+                    wl.removeFromWishlist(productName);
+                    btn.classList.remove('active');
+                    btn.innerHTML = '&#9825; Add to Wishlist';
+                    showToast(productName + ' removed from wishlist');
+                } else {
+                    wl.addToWishlist({
+                        name:       productName,
+                        price:      '£' + productPrice.toFixed(2),
+                        image:      imgSrc,
+                        link:       window.location.pathname,
+                        category:   cat,
+                        product_id: productId
+                    });
+                    btn.classList.add('active');
+                    btn.innerHTML = '&#9829; In Wishlist';
+                    showToast(productName + ' added to wishlist');
+                }
             }
         }
+
+        // Initialise the wishlist button state on page load
+        (function initWishlistBtnDetail() {
+            var wl = window.wishlist;
+            if (!wl) return;
+            var btn = document.getElementById('wishlistBtn');
+            if (!btn) return;
+            if (wl.isLoggedIn && wl.isLoggedIn()) {
+                wl.apiGetItems(function (items) {
+                    var ids = items.map(function (i) { return i.product_id; });
+                    if (ids.indexOf(productId) !== -1) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '&#9829; In Wishlist';
+                    }
+                });
+            } else if (wl.isInWishlist(productName)) {
+                btn.classList.add('active');
+                btn.innerHTML = '&#9829; In Wishlist';
+            }
+        })();
 
         function showToast(msg) {
             const toast = document.getElementById('toast');

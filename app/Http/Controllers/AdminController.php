@@ -100,4 +100,26 @@ class AdminController extends Controller
         ContactMessage::findOrFail($id)->update(['is_read' => true]);
         return back()->with('success', 'Message marked as read.');
     }
+
+    public function refundRequests(Request $request)
+    {
+        $query = \App\Models\RefundRequest::with('order', 'user')->orderBy('created_at', 'desc');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $refundRequests = $query->paginate(20)->withQueryString();
+        return view('admin.refund_requests', compact('refundRequests'));
+    }
+
+    public function updateRefundStatus(Request $request, $id)
+    {
+        $request->validate(['status' => 'required|in:pending,approved,rejected,completed']);
+        \App\Models\RefundRequest::findOrFail($id)->update(['status' => $request->status]);
+        return back()->with('success', 'Refund request status updated.');
+    }
 }

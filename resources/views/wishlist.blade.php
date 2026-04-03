@@ -223,13 +223,24 @@
 <div class="WishlistToast" id="wishlist-page-toast"></div>
 
 <!-- External wishlist JS file (Zak - functionality split) -->
-<script src="{{ asset('js/wishlist.js') }}"></script>
+<script src="{{ asset('js/wishlist.js') }}?v=2"></script>
 
 <script>
 (function () {
 
     /* Key used for storing wishlist in localStorage */
     var STORAGE_KEY = 'skyrose_wishlist';
+
+    /* Determine if user is logged in from nav data attribute */
+    function isLoggedIn() {
+        var nav = document.querySelector('.TopNav');
+        return !!(nav && nav.getAttribute('data-auth') === '1');
+    }
+
+    function getCsrf() {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.getAttribute('content') : '';
+    }
 
     /* Get wishlist items from localStorage */
     function getWishlist() {
@@ -261,131 +272,145 @@
         });
     }
 
-    /* Add item from wishlist to cart (Zak) */
-    function addToCart(name, price) {
-
+    /* Add item from wishlist to cart */
+    function addToCart(name, price, productId) {
         var numericPrice = parseFloat(String(price).replace(/[^0-9.]/g, '')) || 0;
-        var csrf = document.querySelector('meta[name="csrf-token"]');
+        var body = { productName: name, price: numericPrice, quantity: 1 };
+        if (productId) { body.productId = productId; }
 
         fetch('/cart/add', {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrf ? csrf.getAttribute('content') : ''
+                'X-CSRF-TOKEN': getCsrf()
             },
-            body: JSON.stringify({
-                productName: name,
-                price: numericPrice,
-                quantity: 1
-            })
+            body: JSON.stringify(body)
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
-            if (data.success) {
-                showToast(name + ' added to cart');
-            } else {
-                showToast(data.error || 'Could not add to cart');
-            }
+            showToast(data.success ? name + ' added to cart' : (data.error || 'Could not add to cart'));
         })
-        .catch(function () {
-            showToast('Could not add to cart');
-        });
+        .catch(function () { showToast('Could not add to cart'); });
     }
 
-    /* Remove item from wishlist (Kiff) */
-    function removeItem(name) {
-        var items = getWishlist().filter(function (i) {
-            return i.name !== name;
-        });
-
-        saveWishlist(items);
-        showToast(name + ' removed from wishlist');
-
-        renderWishlist();
+    /* Remove item from wishlist */
+    function removeItem(name, productId) {
+        if (isLoggedIn() && productId) {
+            fetch('/wishlist/toggle', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': getCsrf()
+                },
+                body: JSON.stringify({ product_id: productId })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    showToast(name + ' removed from wishlist');
+                    loadAndRender();
+                }
+            })
+            .catch(function () { showToast('Could not remove item'); });
+        } else {
+            saveWishlist(getWishlist().filter(function (i) { return i.name !== name; }));
+            showToast(name + ' removed from wishlist');
+            renderFromLocalStorage();
+        }
     }
 
-    /* Render wishlist items dynamically */
-    function renderWishlist() {
+    /* Build a card's HTML */
+    function buildCard(item) {
+        var safeImage     = escapeHtml(item.image || '/images/logo Skyrose.jpg');
+        var safeName      = escapeHtml(item.name || '');
+        var safeCat       = escapeHtml(item.category || '');
+        var safePrice     = escapeHtml(item.price || '');
+        var safeLink      = escapeHtml(item.link || '/products');
+        var productId     = item.product_id || '';
+
+        return '<div class="WishlistCard">' +
+            '<a href="' + safeLink + '">' +
+            '<img src="' + safeImage + '" alt="' + safeName + '">' +
+            '</a>' +
+            '<div class="WishlistCardBody">' +
+                '<div class="WishlistCardCategory">' + safeCat + '</div>' +
+                '<div class="WishlistCardName">' + safeName + '</div>' +
+                '<div class="WishlistCardPrice">' + safePrice + '</div>' +
+                '<div class="WishlistCardActions">' +
+                    '<button class="WishlistAddToCartBtn" ' +
+                        'data-action="add" ' +
+                        'data-name="' + safeName + '" ' +
+                        'data-price="' + safePrice + '" ' +
+                        'data-product-id="' + escapeHtml(String(productId)) + '"' +
+                    '>Add to Cart</button>' +
+                    '<button class="WishlistRemoveBtn" ' +
+                        'data-action="remove" ' +
+                        'data-name="' + safeName + '" ' +
+                        'data-product-id="' + escapeHtml(String(productId)) + '"' +
+                    '>&#9829;</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    /* Render a list of items into the container */
+    function renderItems(items) {
         var container = document.getElementById('wishlist-container');
-        var items = getWishlist();
-
-        /* If wishlist is empty, show empty state */
         if (items.length === 0) {
-            container.innerHTML = '<div class="WishlistEmpty"> ... </div>';
+            container.innerHTML =
+                '<div class="WishlistEmpty">' +
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+                    '<h2>Your wishlist is empty</h2>' +
+                    '<p>Save items you love by clicking the heart icon on any product.</p>' +
+                    '<a href="/products">Browse Products</a>' +
+                '</div>';
             return;
         }
-
-        /* Build wishlist grid */
         var html = '<div class="WishlistGrid">';
-
-        items.forEach(function (item) {
-
-            /* Clean values before inserting into HTML */
-            var safeImage = escapeHtml(item.image || '/images/logo Skyrose.jpg');
-            var safeName  = escapeHtml(item.name || '');
-            var safeCat   = escapeHtml(item.category || '');
-            var safePrice = escapeHtml(item.price || '');
-            var safeLink  = escapeHtml(item.link || '/products');
-
-            html += '<div class="WishlistCard">' +
-
-                /* Clickable product image */
-                '<a href="' + safeLink + '">' +
-                '<img src="' + safeImage + '" alt="' + safeName + '">' +
-                '</a>' +
-
-                '<div class="WishlistCardBody">' +
-                    '<div class="WishlistCardCategory">' + safeCat + '</div>' +
-                    '<div class="WishlistCardName">' + safeName + '</div>' +
-                    '<div class="WishlistCardPrice">' + safePrice + '</div>' +
-
-                    '<div class="WishlistCardActions">' +
-                        /* Add to cart button (uses data-attrs + delegated handler) */
-                        '<button class="WishlistAddToCartBtn" ' +
-                            'data-action="add" ' +
-                            'data-name="' + safeName + '" ' +
-                            'data-price="' + safePrice + '"' +
-                        '>Add to Cart</button>' +
-
-                        /* Remove button (uses data-attrs + delegated handler) */
-                        '<button class="WishlistRemoveBtn" ' +
-                            'data-action="remove" ' +
-                            'data-name="' + safeName + '"' +
-                        '>&#9829;</button>' +
-
-                    '</div>' +
-                '</div>' +
-            '</div>';
-        });
-
+        items.forEach(function (item) { html += buildCard(item); });
         html += '</div>';
         container.innerHTML = html;
     }
 
-    /* Make functions accessible globally */
-    window.removeFromWishlistPage = removeItem;
+    /* Load from API (logged-in users) and render */
+    function loadAndRender() {
+        fetch('/wishlist/data', { credentials: 'include' })
+        .then(function (r) { return r.json(); })
+        .then(function (data) { renderItems(data.items || []); })
+        .catch(function () { renderItems([]); });
+    }
 
-    /* Handle clicks via event delegation so data-attrs stay safe and re-renders still work */
+    /* Render from localStorage (guests) */
+    function renderFromLocalStorage() {
+        renderItems(getWishlist());
+    }
+
+    /* Handle clicks via event delegation */
     var wishlistContainer = document.getElementById('wishlist-container');
     document.addEventListener('click', function (e) {
         if (!wishlistContainer || !wishlistContainer.contains(e.target)) return;
 
-        var addBtn = e.target.closest('.WishlistAddToCartBtn');
+        var addBtn    = e.target.closest('.WishlistAddToCartBtn');
         var removeBtn = e.target.closest('.WishlistRemoveBtn');
 
         if (addBtn && addBtn.dataset.name) {
-            addToCart(addBtn.dataset.name, addBtn.dataset.price);
+            addToCart(addBtn.dataset.name, addBtn.dataset.price, addBtn.dataset.productId || null);
             return;
         }
 
         if (removeBtn && removeBtn.dataset.name) {
-            removeItem(removeBtn.dataset.name);
+            removeItem(removeBtn.dataset.name, removeBtn.dataset.productId ? parseInt(removeBtn.dataset.productId, 10) : null);
         }
     });
 
     /* Initial render on page load */
-    renderWishlist();
+    if (isLoggedIn()) {
+        loadAndRender();
+    } else {
+        renderFromLocalStorage();
+    }
 
 })();
 </script>

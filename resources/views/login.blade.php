@@ -125,7 +125,7 @@
 
     </div>
      <!-- site-wide JS -->
-    <script src="js/index.js" defer></script>
+    <script src="{{ asset('js/index.js') }}?v=2" defer></script>
 </body>
 </html>
 

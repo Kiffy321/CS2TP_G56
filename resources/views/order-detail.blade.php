@@ -121,11 +121,11 @@
                         @endif
 
                     
-        @if(true)
-            <button onclick="requestReturn({{ $order->id }})" class="ActionBtn return">
-                Request Return
-            </button>
-        @endif
+@if(in_array($order->status, ['pending', 'processing']))
+                            <button onclick="requestRefund({{ $order->id }}, this)" class="ActionBtn" style="background:#6f42c1;color:#fff;">Request Refund</button>
+                        @elseif($order->status === 'completed')
+                            <button onclick="requestReturn({{ $order->id }}, this)" class="ActionBtn" style="background:#b77b2b;color:#fff;">Request Return</button>
+                        @endif
 
 
 
@@ -186,10 +186,44 @@
             });
         }
 
-        function requestReturn(orderId) {
+        function requestRefund(orderId, btn) {
+            showConfirm('Request a refund for this order?', "We'll review your request shortly.", 'Request Refund', '#6f42c1', () => {
+                btn.disabled = true;
+                fetch(`/orders/${orderId}/refund`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Refund request submitted.');
+                        setTimeout(() => location.reload(), 1200);
+                    } else {
+                        showToast('Error: ' + (data.error || 'Could not submit refund.'));
+                        btn.disabled = false;
+                    }
+                })
+                .catch(() => { showToast('An error occurred.'); btn.disabled = false; });
+            });
+        }
+        function requestReturn(orderId, btn) {
             showConfirm('Request a return for this order?', "We'll review your request shortly.", 'Request Return', '#b77b2b', () => {
-                showToast('Submitting return request...');
-                setTimeout(() => { showToast('Return request sent!'); }, 1000);
+                btn.disabled = true;
+                fetch(`/orders/${orderId}/return`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Return request submitted.');
+                        setTimeout(() => location.reload(), 1200);
+                    } else {
+                        showToast('Error: ' + (data.error || 'Could not submit return.'));
+                        btn.disabled = false;
+                    }
+                })
+                .catch(() => { showToast('An error occurred.'); btn.disabled = false; });
             });
         }
 

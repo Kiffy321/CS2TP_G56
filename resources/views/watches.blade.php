@@ -24,98 +24,43 @@
 
       <!-- main product grid -->
       <main class="ProductsGrid" aria-label="Watches">
-        <!-- single watch product card + description + price -->
-        <a class="ProductCard" href="/products?product=gold-watch" data-name="Gold Watch" data-category="Watch">
+        @foreach($products as $product)
+        <a class="ProductCard" href="/products/{{ $product->id }}" data-name="{{ $product->name }}" data-category="{{ $product->category }}" data-id="{{ $product->id }}">
           <div class="ProductImageWrap">
-            <img class="ProductImage" src="{{ asset('images/gold-watch.jpg') }}" alt="Gold Watch">
+            <img class="ProductImage" src="{{ asset($product->image_url) }}" alt="{{ $product->name }}">
             <span class="ProductBadge">Watch</span>
           </div>
           <div class="ProductInfo">
-            <h3 class="ProductTitle">Gold Watch</h3>
-            <p class="ProductDescription">A timeless gold factory watch inspired by classical forms. Precision craftsmanship meets elegant design.</p>
-            <div class="ProductMeta"><span class="ProductPrice">£650</span></div>
-            <div class="QuantitySelector"><label>Qty:</label><select id="qty-gold-watch"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div>
+            <h3 class="ProductTitle">{{ $product->name }}</h3>
+            <p class="ProductDescription">{{ $product->description }}</p>
+            <div class="ProductMeta">
+              <span class="StockText {{ $product->stock_quantity > 0 ? 'in-stock' : 'out-of-stock' }}">
+                {{ $product->stock_quantity > 0 ? 'In Stock' : 'Out of Stock' }}
+              </span>
+              <span class="ProductPrice">&pound;{{ number_format($product->price, 2) }}</span>
+            </div>
+            <div class="QuantitySelector">
+              <label>Qty:</label>
+              <select id="qty-{{ Str::slug($product->name) }}">
+                @for($i = 1; $i <= min(10, $product->stock_quantity); $i++)
+                  <option value="{{ $i }}">{{ $i }}</option>
+                @endfor
+              </select>
+            </div>
             <div class="ProductCardActions">
-              <button class="AddToCartButton" onclick="addToCartWithQuantity(event, 'Gold Watch', 'qty-gold-watch')">Add to Cart</button>
+              <button class="AddToCartButton" onclick="addToCartWithQuantity(event, '{{ $product->name }}', 'qty-{{ Str::slug($product->name) }}', {{ $product->price }}, {{ $product->id }})">Add to Cart</button>
               <button type="button" class="WishlistBtn" onclick="toggleWishlist(event, this)" title="Add to wishlist">&#9825;</button>
             </div>
           </div>
         </a>
-
-        <a class="ProductCard" href="/products?product=sport-watch" data-name="Sport Watch" data-category="Watch">
-          <div class="ProductImageWrap">
-            <img class="ProductImage" src="{{ asset('images/sport-watch.jpg') }}" alt="Sport Watch">
-            <span class="ProductBadge">Watch</span>
-          </div>
-          <div class="ProductInfo">
-            <h3 class="ProductTitle">Sport Watch</h3>
-            <p class="ProductDescription">A timeless watch inspired by classical forms. Precision craftsmanship meets elegant design.</p>
-            <div class="ProductMeta"><span class="ProductPrice">£290</span></div>
-            <div class="QuantitySelector"><label>Qty:</label><select id="qty-sport-watch"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div>
-            <div class="ProductCardActions">
-              <button class="AddToCartButton" onclick="addToCartWithQuantity(event, 'Sport Watch', 'qty-sport-watch')">Add to Cart</button>
-              <button type="button" class="WishlistBtn" onclick="toggleWishlist(event, this)" title="Add to wishlist">&#9825;</button>
-            </div>
-          </div>
-        </a>
-
-        <a class="ProductCard" href="/products?product=silver-watch" data-name="Silver Watch" data-category="Watch">
-          <div class="ProductImageWrap">
-            <img class="ProductImage" src="{{ asset('images/silver-watch.jpg') }}" alt="Silver Watch">
-            <span class="ProductBadge">Watch</span>
-          </div>
-          <div class="ProductInfo">
-            <h3 class="ProductTitle">Silver Watch</h3>
-            <p class="ProductDescription">A timeless factory silver watch inspired by classical forms. Precision craftsmanship meets elegant design.</p>
-            <div class="ProductMeta"><span class="ProductPrice">£410</span></div>
-            <div class="QuantitySelector"><label>Qty:</label><select id="qty-silver-watch"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div>
-            <div class="ProductCardActions">
-              <button class="AddToCartButton" onclick="addToCartWithQuantity(event, 'Silver Watch', 'qty-silver-watch')">Add to Cart</button>
-              <button type="button" class="WishlistBtn" onclick="toggleWishlist(event, this)" title="Add to wishlist">&#9825;</button>
-            </div>
-          </div>
-        </a>
-
-        <a class="ProductCard" href="/products?product=Classic-leather-watch" data-name="Classic Leather Watch" data-category="Watch">
-          <div class="ProductImageWrap">
-            <img class="ProductImage" src="{{ asset('images/classic-leather-watch.jpg') }}" alt="Classic Leather Watch">
-            <span class="ProductBadge">Watch</span>
-          </div>
-          <div class="ProductInfo">
-            <h3 class="ProductTitle">Classic Leather Watch</h3>
-            <p class="ProductDescription">A timeless classic leather watch inspired by classical forms. Precision craftsmanship meets elegant design.</p>
-            <div class="ProductMeta"><span class="ProductPrice">£350</span></div>
-            <div class="QuantitySelector"><label>Qty:</label><select id="qty-classic-leather-watch"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div>
-            <div class="ProductCardActions">
-              <button class="AddToCartButton" onclick="addToCartWithQuantity(event, 'Classic Leather Watch', 'qty-classic-leather-watch')">Add to Cart</button>
-              <button type="button" class="WishlistBtn" onclick="toggleWishlist(event, this)" title="Add to wishlist">&#9825;</button>
-            </div>
-          </div>
-        </a>
-
-        <a class="ProductCard" href="/products?product=signature-watch" data-name="Luxury Watch" data-category="Watch">
-          <div class="ProductImageWrap">
-            <img class="ProductImage" src="{{ asset('images/Rolexwatch.jpg') }}" alt="Luxury Watch">
-            <span class="ProductBadge">Watch</span>
-          </div>
-          <div class="ProductInfo">
-            <h3 class="ProductTitle">Luxury Watch</h3>
-            <p class="ProductDescription">A timeless watch inspired by classical forms. Precision craftsmanship meets elegant design.</p>
-            <div class="ProductMeta"><span class="ProductPrice">£850</span></div>
-            <div class="QuantitySelector"><label>Qty:</label><select id="qty-luxury-watch"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div>
-            <div class="ProductCardActions">
-              <button class="AddToCartButton" onclick="addToCartWithQuantity(event, 'Luxury Watch', 'qty-luxury-watch')">Add to Cart</button>
-              <button type="button" class="WishlistBtn" onclick="toggleWishlist(event, this)" title="Add to wishlist">&#9825;</button>
-            </div>
-          </div>
-        </a>
+        @endforeach
       </main>
 
     </div>
     @include('partials.footer')
   </div>
 
-  <script src="{{ asset('js/wishlist.js') }}" defer></script>
+  <script src="{{ asset('js/wishlist.js') }}?v=2" defer></script>
 </body>
 </html>
 

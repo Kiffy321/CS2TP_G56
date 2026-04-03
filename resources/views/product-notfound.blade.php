@@ -7,7 +7,7 @@
     <title>Product Details</title>
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <link rel="icon" type="image/jpeg" href="{{ asset('images/logo%20Skyrose.jpg') }}">
-    <script src="{{ asset('js/index.js') }}" defer></script>
+    <script src="{{ asset('js/index.js') }}?v=2" defer></script>
     <style>
         .ProductDetail {
             display: flex;
@@ -337,7 +337,7 @@
                 <p class="ContactTitle">© 2025 Luxury Jewelry Store</p>
             </footer>
         </div>
-        <script src="{{ asset('js/index.js') }}" defer></script>
+        <script src="{{ asset('js/index.js') }}?v=2" defer></script>
     </div>
 
     <script>

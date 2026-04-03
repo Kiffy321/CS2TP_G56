@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Our Products</title>
         <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-        <script src="{{ asset('js/index.js') }}" defer></script>
+        <script src="{{ asset('js/index.js') }}?v=2" defer></script>
         <style>
             /* Product Detail View Responsive Styles */
             #productDetailView .detail-grid {
@@ -75,8 +75,27 @@
 
 <!-- Products Grid (uses CSS in css/index.css) -->
 <main class="ProductsGrid" id="productsGrid" aria-label="Product list">
+<script>
+(function(){
+    function fixGrid(){
+        var g = document.getElementById('productsGrid');
+        if(!g) return;
+        if(window.innerWidth <= 600){
+            g.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            g.style.gap = '12px';
+            g.style.padding = '12px';
+        } else {
+            g.style.gridTemplateColumns = '';
+            g.style.gap = '';
+            g.style.padding = '';
+        }
+    }
+    fixGrid();
+    window.addEventListener('resize', fixGrid);
+})();
+</script>
     @foreach($products as $product)
-        <a class="ProductCard" href="/products/{{ $product->id }}" data-name="{{ $product->name }}" data-category="{{ $product->category }}">
+        <a class="ProductCard" href="/products/{{ $product->id }}" data-name="{{ $product->name }}" data-category="{{ $product->category }}" data-id="{{ $product->id }}">
             <div class="ProductImageWrap">
                 <img class="ProductImage" src="{{ asset($product->image_url) }}" alt="{{ $product->name }}">
                 <span class="ProductBadge">{{ $product->category }}</span>
@@ -162,7 +181,8 @@
     </div>
 
     @include('partials.footer')
-<script src="{{ asset('js/index.js') }}" defer></script>
+<script src="{{ asset('js/index.js') }}?v=2" defer></script>
+<script src="{{ asset('js/wishlist.js') }}?v=2" defer></script>
 
 <script>
 // Check if we're viewing a specific product

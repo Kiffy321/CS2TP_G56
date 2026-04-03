@@ -114,7 +114,9 @@
                     </tbody>
                 </table>
 
-                <div class="section-title">Recent Refund/Return Requests</div>
+                <div class="section-title">Recent Refund/Return Requests
+                    <a href="{{ route('admin.refund-requests') }}" style="float:right;font-size:13px;font-weight:600;background:#111;color:#fff;padding:4px 14px;border-radius:4px;text-decoration:none;">View All</a>
+                </div>
                 <table class="orders-table">
                     <thead>
                         <tr>
@@ -123,6 +125,7 @@
                             <th>Customer</th>
                             <th>Status</th>
                             <th>Date</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,9 +136,10 @@
                             <td>{{ $request->user->name ?? 'Unknown' }}</td>
                             <td><span class="status-badge status-{{ $request->status }}">{{ ucfirst($request->status) }}</span></td>
                             <td>{{ $request->created_at->format('d M Y H:i') }}</td>
+                            <td><a href="{{ route('orders.show', $request->order_id) }}" style="font-weight:600;color:#111;text-decoration:none;">View Order →</a></td>
                         </tr>
                         @empty
-                        <tr><td colspan="5" style="text-align:center;color:#999;">No refund or return requests yet.</td></tr>
+                        <tr><td colspan="6" style="text-align:center;color:#999;">No refund or return requests yet.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

@@ -141,7 +141,7 @@
             </footer>
         </div>
     </div>
-    <script src="js/index.js" defer></script>
+    <script src="{{ asset('js/index.js') }}?v=2" defer></script>
 </body>
 </html>
                     document.getElementById('error-msg').classList.remove('hidden');
@@ -167,7 +167,7 @@
 
     </div>
     <!-- main JS for site (header/cart etc.) -->
-    <script src="js/index.js" defer></script>
+    <script src="{{ asset('js/index.js') }}?v=2" defer></script>
 </body>
 </html>
 

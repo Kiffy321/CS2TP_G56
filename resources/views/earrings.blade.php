@@ -115,7 +115,7 @@
     @include('partials.footer')
   </div>
 
-  <script src="{{ asset('js/wishlist.js') }}" defer></script>
+  <script src="{{ asset('js/wishlist.js') }}?v=2" defer></script>
 </body>
 </html>
 
