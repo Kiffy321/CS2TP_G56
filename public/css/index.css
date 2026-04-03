@@ -174,34 +174,128 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     cursor: pointer;
 }
 
-/* Mobile navigation support */
-.nav-links{
+/* Navigation drawer */
+.NavToggle{
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid #111;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #111;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    transition: background 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
+}
+.NavToggle:hover{ background: #111; color: #fff; }
+
+.NavOverlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1050;
+}
+.NavOverlay.open{ display: block; }
+
+.NavDrawer{
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+    transition: left 0.3s ease;
+}
+.NavDrawer.open{ left: 0; }
+
+.NavDrawerHeader{
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: rgba(200, 195, 137, 0.85);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
 }
+.NavDrawerTitle{
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: 0.3px;
+}
+.NavDrawerClose{
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #111;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.15s ease;
+}
+.NavDrawerClose:hover{ background: rgba(0,0,0,0.08); }
 
-.nav-hamburger{
-    display: none;
+.NavDrawerLinks{
+    flex: 1;
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 36px;
-    height: 36px;
+    padding: 12px 0;
+    overflow-y: auto;
+}
+.NavDrawerLinks a{
+    padding: 14px 24px;
+    font-size: 16px;
+    color: #111;
+    text-decoration: none;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.NavDrawerLinks a:hover{ background: rgba(212,175,55,0.1); color: #8a6d1f; }
+
+.NavDrawerIcons{
+    border-top: 2px solid rgba(200,195,137,0.6);
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+}
+.NavDrawerSearchWrap{ padding: 8px 16px 12px; }
+.NavDrawerSearch{
+    width: 100% !important;
+    min-width: unset !important;
+    box-sizing: border-box;
+}
+.NavDrawerIconLink{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    font-size: 14px;
+    color: #111;
+    text-decoration: none;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 6px;
-    flex-shrink: 0;
-    margin-left: 8px;
+    font-family: inherit;
+    font-weight: 500;
+    transition: background 0.15s ease;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
 }
-
-.nav-hamburger span{
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: #111;
-    border-radius: 2px;
-}
+.NavDrawerIconLink:hover{ background: rgba(212,175,55,0.1); }
+.NavDrawerLogout{ color: #b91c1c; }
+.NavDrawerLogout:hover{ background: rgba(185,28,28,0.06); }
 
 .NavHello{
     color: #111;
@@ -1204,40 +1298,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
     .ProductsGrid{ padding: 16px }
     .AuthCard{ padding: 18px }
     .AuthTitle{ font-size:22px }
-}
-
-@media (max-width: 768px){
-    .nav-hamburger{ display: flex; }
-
-    .nav-links{
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        flex-direction: column;
-        background: rgba(200, 195, 137, 0.97);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        padding: 8px 0 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        z-index: 998;
-    }
-
-    .nav-links.open{ display: flex; }
-
-    .nav-links a{
-        padding: 12px 24px;
-        border-radius: 0;
-        width: 100%;
-        text-align: left;
-        box-sizing: border-box;
-    }
-
-    .NavSearchWrap{ display: none; }
-    .IconNav{ gap: 4px; }
-    .IconNav img{ max-width: 22px; height: 22px; }
-    .IconNav a[aria-label="Cart"] img{ max-width: 26px; height: 26px; }
 }
 
 /* Responsive tweaks for small screens */
