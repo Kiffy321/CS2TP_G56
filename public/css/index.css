@@ -175,7 +175,27 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 }
 
 /* Navigation drawer */
+.DesktopNavLinks{
+    display: flex;
+    align-items: center;
+}
+.DesktopNavLinks a{
+    color: black;
+    text-align: center;
+    border-radius: 2px;
+    padding: 15px;
+    flex-shrink: 0;
+    font-size: 15px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.DesktopNavLinks a:hover{
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
 .NavToggle{
+    display: none; /* hidden on desktop */
     margin-left: auto;
     background: transparent;
     border: 1px solid #111;
@@ -296,6 +316,12 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
 .NavDrawerIconLink:hover{ background: rgba(212,175,55,0.1); }
 .NavDrawerLogout{ color: #b91c1c; }
 .NavDrawerLogout:hover{ background: rgba(185,28,28,0.06); }
+
+@media (max-width: 768px){
+    .DesktopNavLinks{ display: none; }
+    .DesktopIconNav{ display: none !important; }
+    .NavToggle{ display: block; }
+}
 
 .NavHello{
     color: #111;
