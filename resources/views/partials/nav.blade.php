@@ -8,7 +8,7 @@
     </a>
 
     {{-- Desktop nav links (hidden on mobile) --}}
-    <div class="DesktopNavLinks">
+    <div class="DesktopNavLinks" id="desktop-nav-links" style="display:none;">
         <a href="{{ $homeUrl }}">Home</a>
         <a href="/about">About</a>
         <a href="/products">Products</a>
@@ -21,7 +21,7 @@
     </div>
 
     {{-- Desktop icon nav (hidden on mobile) --}}
-    <div class="IconNav DesktopIconNav" style="display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
+    <div class="IconNav DesktopIconNav" id="desktop-icon-nav" style="display:none; justify-content: flex-end; align-items: center; gap: 16px;">
         <div class="NavSearchWrap">
             <input type="text" class="NavSearchInput" placeholder="Search products..." aria-label="Search products">
         </div>
@@ -149,11 +149,15 @@
     var overlay = document.getElementById('nav-overlay');
     var close = document.getElementById('nav-close');
 
-    // Show the toggle button only on mobile
+    var desktopLinks = document.getElementById('desktop-nav-links');
+    var desktopIcons = document.getElementById('desktop-icon-nav');
+
+    // Show/hide elements based on screen width
     function checkMobile(){
-        if(toggle){
-            toggle.style.display = window.innerWidth <= 768 ? 'block' : 'none';
-        }
+        var isMobile = window.innerWidth <= 768;
+        if(toggle) toggle.style.display = isMobile ? 'block' : 'none';
+        if(desktopLinks) desktopLinks.style.display = isMobile ? 'none' : 'flex';
+        if(desktopIcons) desktopIcons.style.display = isMobile ? 'none' : 'flex';
     }
     checkMobile();
     window.addEventListener('resize', checkMobile);
