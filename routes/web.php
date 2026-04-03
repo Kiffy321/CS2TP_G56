@@ -166,6 +166,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Mark contact message as read
     Route::patch('/messages/{id}/read', [AdminController::class, 'markMessageRead'])->name('messages.read');
+
+    // Refund/Return requests
+    Route::get('/refund-requests',              [AdminController::class, 'refundRequests'])->name('refund-requests');
+    Route::patch('/refund-requests/{id}/status',[AdminController::class, 'updateRefundStatus'])->name('refund-requests.updateStatus');
 });
 
 /*
